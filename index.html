@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>MiNI BRoKER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+body{background:#F7F1E5;color:#16181F;font-family:'VT323',monospace}
+img{image-rendering:pixelated;-ms-interpolation-mode:nearest-neighbor}
+a{color:#16181F;text-decoration:none}
+a:hover{color:#E23B32}
+button{font-family:'Press Start 2P',monospace}
+input{font-family:'VT323',monospace}
+@keyframes mbfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes mbmarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes mbpop{0%{transform:scale(.88);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes mbshoot{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-140px);opacity:0}}
+@keyframes mbblink{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+</helmet>
+
+<div style="background:#16181F;width:100%">
+  <div style="max-width:1180px;margin:0 auto;padding:12px clamp(10px,2.5vw,22px);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end">
+    <sc-if value="{{ navInline }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="11">
+          <button onClick="{{ n.on }}" style="font-size:10px;line-height:1.4;padding:9px 10px;background:{{ n.bg }};color:{{ n.fg }};border:3px solid {{ n.bd }};cursor:pointer">{{ n.label }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ navCompact }}">
+      <div style="position:relative;margin-left:auto">
+        <button onClick="{{ toggleMenu }}" style="font-size:11px;padding:11px 13px;background:#EFBF2E;color:#16181F;border:3px solid #16181F;cursor:pointer">MENU</button>
+        <sc-if value="{{ menuOpen }}">
+          <div style="position:absolute;top:calc(100% + 8px);right:0;z-index:60;display:flex;flex-direction:column;gap:4px;background:#16181F;border:4px solid #F7F1E5;padding:8px;min-width:220px;animation:mbpop .16s steps(3) both">
+            <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="11">
+              <button onClick="{{ n.on }}" style="font-size:10px;line-height:1.5;padding:10px;text-align:left;background:{{ n.bg }};color:{{ n.fg }};border:3px solid {{ n.bd }};cursor:pointer">{{ n.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+</div>
+
+<div style="max-width:1180px;margin:0 auto;padding:clamp(18px,3vw,30px) clamp(12px,3vw,26px) 56px;display:flex;flex-direction:column;gap:clamp(26px,4.5vw,50px)">
+
+  <sc-if value="{{ isInternal }}">
+    <div>
+      <button onClick="{{ back }}" style="font-size:10px;padding:11px 15px;background:#FCF8EF;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">&lt; BACK</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showHero }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:clamp(14px,2.4vw,22px)">
+      <h1 style="font-family:'Press Start 2P',monospace;font-size:clamp(28px,7vw,62px);line-height:1.25;margin:0;color:#16181F;letter-spacing:2px">MiNI B<span style="color:#E23B32">R</span>oKER</h1>
+      <p style="font-size:clamp(19px,2.3vw,24px);line-height:1.3;margin:0;max-width:620px">A pixel-art NFT collection on Robinhood Mainnet. Chunky pixels, hard outlines, and a brokerage floor run entirely by tiny brokers.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,28px);align-items:flex-start">
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:8px;animation:mbfloat 4.5s ease-in-out infinite">
+          <div role="img" aria-label="Featured MiNI BRoKER NFT" style="width:clamp(180px,38vw,300px);aspect-ratio:1;background-image:url(uploads/nft/91.png);background-size:cover;image-rendering:pixelated"></div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;padding:8px 2px 2px;color:#16181F">FEATURED · #91</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:min(100%,260px);flex:1">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6">
+            <span style="padding:10px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">SUPPLY 5,000</span>
+            <span style="padding:10px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">SEASON 01</span>
+            <span style="padding:10px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">ROBINHOOD MAINNET</span>
+          </div>
+          <button onClick="{{ goWhitelist }}" style="font-size:clamp(12px,2vw,17px);line-height:1.5;padding:clamp(15px,2.2vw,20px) clamp(18px,3.4vw,34px);background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;cursor:pointer;align-self:flex-start" style-hover="background:#E08A2E">JOIN WHITELIST</button>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <button onClick="{{ goStaking }}" style="font-size:10px;padding:12px 15px;background:#6E35CE;color:#F7F1E5;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">STAKE</button>
+            <button onClick="{{ goToken }}" style="font-size:10px;padding:12px 15px;background:#33A155;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">$MINiBRKR</button>
+            <button onClick="{{ goSea }}" style="font-size:10px;padding:12px 15px;background:#3BA3E8;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">OpenSea</button>
+          </div>
+          <button onClick="{{ openWallet }}" style="font-size:9px;padding:11px 13px;background:#FCF8EF;color:#16181F;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F;cursor:pointer;align-self:flex-start">CONNECT WALLET</button>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showEntry }}" hint-placeholder-val="{{ true }}">
+    <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:clamp(14px,2.4vw,20px)">
+      <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,2.6vw,24px);display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2vw,16px);line-height:1.5;margin:0;color:#16181F">FIND THE BROKER</h3>
+        <p style="font-size:20px;line-height:1.3;margin:0">Sixteen mystery blocks. Three hidden brokers. Three chances.</p>
+        <button onClick="{{ goHunt }}" style="font-size:10px;padding:12px 14px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">PLAY THE HUNT</button>
+      </div>
+      <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,2.6vw,24px);display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2vw,16px);line-height:1.5;margin:0;color:#16181F">PIXEL ART STUDIO</h3>
+        <p style="font-size:20px;line-height:1.3;margin:0">Draw your own MiNI BRoKER pixel character, one block at a time.</p>
+        <button onClick="{{ goStudio }}" style="font-size:10px;padding:12px 14px;background:#6E35CE;color:#F7F1E5;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">OPEN STUDIO</button>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showGallery }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">NFT GALLERY</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:640px">Sixty brokers from the MiNI BRoKER collection.</p>
+      <sc-if value="{{ galleryMarquee }}" hint-placeholder-val="{{ true }}">
+        <div style="overflow:hidden;max-width:100%;padding:4px 0 12px">
+          <div style="display:flex;gap:12px;width:max-content;animation:mbmarquee 80s linear infinite">
+            <sc-for list="{{ gallery }}" as="g">
+              <div style="width:clamp(112px,16vw,150px);flex:0 0 auto;background:#FCF8EF;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F">
+                <div role="img" aria-label="MiNI BRoKER NFT" style="width:100%;aspect-ratio:1;background-image:url({{ g.src }});background-size:cover;image-rendering:pixelated"></div>
+                <div style="font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6;text-align:center;padding:7px 2px;border-top:4px solid #16181F">{{ g.id }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ galleryGrid }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:clamp(10px,1.8vw,16px)">
+          <sc-for list="{{ gallery }}" as="g">
+            <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F">
+              <div role="img" aria-label="MiNI BRoKER NFT" style="width:100%;aspect-ratio:1;background-image:url({{ g.src }});background-size:cover;image-rendering:pixelated"></div>
+              <div style="font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6;text-align:center;padding:7px 2px;border-top:4px solid #16181F">{{ g.id }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showHunt }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">FIND THE BROKER</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">Three brokers are hiding behind the blocks. Find all three within three picks.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6">
+        <span style="padding:11px 13px;background:#E23B32;color:#F7F1E5;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F">CHANCES: {{ chances }}</span>
+        <span style="padding:11px 13px;background:#33A155;color:#F7F1E5;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F">FIND 3 · FOUND {{ found }}</span>
+        <button onClick="{{ newGame }}" style="font-size:11px;padding:11px 13px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">NEW GAME</button>
+      </div>
+      <sc-if value="{{ huntWon }}">
+        <div style="position:relative;overflow:hidden;background:#16181F;border:4px solid #33A155;box-shadow:8px 8px 0 #16181F;padding:clamp(18px,3.4vw,28px);text-align:center">
+          <div style="position:absolute;left:50%;top:60%;transform:rotate(0deg)"><div style="width:10px;height:10px;background:#EFBF2E;animation:mbshoot 1s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:60%;transform:rotate(60deg)"><div style="width:10px;height:10px;background:#E23B32;animation:mbshoot 1.1s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:60%;transform:rotate(120deg)"><div style="width:10px;height:10px;background:#3BA3E8;animation:mbshoot .9s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:60%;transform:rotate(180deg)"><div style="width:10px;height:10px;background:#6E35CE;animation:mbshoot 1.2s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:60%;transform:rotate(240deg)"><div style="width:10px;height:10px;background:#E08A2E;animation:mbshoot 1.05s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:60%;transform:rotate(300deg)"><div style="width:10px;height:10px;background:#F7F1E5;animation:mbshoot .95s steps(6) infinite"></div></div>
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.6vw,20px);line-height:1.6;margin:0 0 10px;color:#33A155;position:relative">YOU FOUND THEM</h3>
+          <p style="font-size:21px;line-height:1.3;margin:0;color:#F7F1E5;position:relative">ALL THREE BROKERS UNCOVERED</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ huntLost }}">
+        <div style="background:#16181F;border:4px solid #E23B32;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,24px);text-align:center">
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.6vw,19px);line-height:1.6;margin:0 0 10px;color:#E23B32">OUT OF CHANCES</h3>
+          <p style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7;margin:0;color:#F7F1E5">START A NEW GAME TO TRY AGAIN</p>
+        </div>
+      </sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:clamp(8px,1.4vw,12px)">
+        <sc-for list="{{ huntCards }}" as="c">
+          <button onClick="{{ c.on }}" style="padding:0;background:{{ c.bg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer;display:block;width:100%">
+            <sc-if value="{{ c.rev }}">
+              <div role="img" aria-label="Revealed NFT" style="width:100%;aspect-ratio:1;background-image:url({{ c.src }});background-size:cover;image-rendering:pixelated"></div>
+              <div style="font-family:'Press Start 2P',monospace;font-size:8px;line-height:1.6;padding:5px 2px;background:{{ c.tagBg }};color:{{ c.tagFg }};border-top:4px solid #16181F">{{ c.tag }}</div>
+            </sc-if>
+            <sc-if value="{{ c.hidden }}">
+              <span style="display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:1;font-family:'Press Start 2P',monospace;font-size:clamp(18px,4vw,30px);color:#16181F">?</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <div style="background:#EFBF2E;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,2.6vw,22px)">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7;margin:0 0 12px;color:#16181F">REWARD UNLOCKS AFTER MINT</h3>
+        <p style="font-size:20px;line-height:1.3;margin:0;color:#16181F">Find all three after the MiNI BRoKER mint is complete to become eligible for the $1 equivalent $MINiBRKR reward. The game is a preview until then.</p>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showStudio }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">PIXEL ART STUDIO</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:680px">Draw your own MiNI BRoKER pixel character. Good pixel art rewards patience, one block at a time.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <sc-for list="{{ swatches }}" as="s" hint-placeholder-count="8">
+          <button onClick="{{ s.on }}" aria-label="Color" style="width:46px;height:46px;background:{{ s.color }};border:4px solid #16181F;box-shadow:4px 4px 0 #16181F;cursor:pointer"></button>
+        </sc-for>
+        <button onClick="{{ setEraser }}" style="font-size:10px;padding:13px 14px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:4px 4px 0 #16181F;cursor:pointer">ERASER</button>
+        <button onClick="{{ clearGrid }}" style="font-size:10px;padding:13px 14px;background:#E23B32;color:#F7F1E5;border:4px solid #16181F;box-shadow:4px 4px 0 #16181F;cursor:pointer">CLEAR</button>
+      </div>
+      <div onTouchMove="{{ onTouch }}" onTouchStart="{{ onTouch }}" style="display:grid;grid-template-columns:repeat(16,1fr);width:100%;max-width:560px;aspect-ratio:1;background:#F7F1E5;border:5px solid #16181F;box-shadow:8px 8px 0 #16181F;touch-action:none">
+        <sc-for list="{{ cells }}" as="c" hint-placeholder-count="256">
+          <div data-idx="{{ c.i }}" onMouseDown="{{ c.down }}" onMouseEnter="{{ c.enter }}" style="background:{{ c.bg }};outline:1px solid #16181F;outline-offset:-1px"></div>
+        </sc-for>
+      </div>
+      <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,2.6vw,22px);display:flex;flex-direction:column;gap:12px;align-items:flex-start;max-width:560px">
+        <span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7;color:#16181F">ADD YOUR SIGNATURE</span>
+        <input value="{{ sig }}" onChange="{{ onSig }}" placeholder="your signature" maxLength="18" style="font-size:22px;padding:11px;background:#F7F1E5;color:#16181F;border:4px solid #16181F;width:100%;max-width:320px"></input>
+        <sc-if value="{{ needSig }}" hint-placeholder-val="{{ true }}">
+          <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E23B32;animation:mbblink 1.4s steps(2) infinite">SIGNATURE IS REQUIRED</span>
+        </sc-if>
+        <button onClick="{{ downloadArt }}" disabled="{{ needSig }}" style="font-size:11px;padding:13px 16px;background:{{ dlBg }};color:{{ dlFg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:{{ dlCursor }}">DOWNLOAD</button>
+      </div>
+      <p style="font-size:19px;line-height:1.3;margin:0">The @MlNiBroker tag is added in the corner at export time only.</p>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showWl }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">WHITE<span style="color:#E23B32">L</span>IST</h2>
+      <sc-if value="{{ wlActive }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0">Complete every task in order to secure GTD eligibility.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+            <sc-for list="{{ wlDots }}" as="d" hint-placeholder-count="6">
+              <div style="background:{{ d.bg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;padding:12px 8px;text-align:center">
+                <div style="font-family:'Press Start 2P',monospace;font-size:12px;line-height:1.6;color:{{ d.fg }}">{{ d.num }} / 06</div>
+                <div style="font-family:'Press Start 2P',monospace;font-size:8px;line-height:1.8;color:{{ d.fg }}">{{ d.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,26px);display:flex;flex-direction:column;gap:14px">
+            <span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7;color:#E23B32">TASK {{ wlLabel }}</span>
+            <sc-if value="{{ st1 }}" hint-placeholder-val="{{ true }}">
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.2vw,17px);line-height:1.6;margin:0;color:#16181F">X USERNAME</h3>
+              <p style="font-size:20px;line-height:1.3;margin:0">Enter the X username you will use for the WhiteList.</p>
+              <input value="{{ wlX }}" onChange="{{ onX }}" placeholder="@username" style="font-size:22px;padding:12px;background:#F7F1E5;color:#16181F;border:4px solid #16181F;width:100%;max-width:420px"></input>
+            </sc-if>
+            <sc-if value="{{ st2 }}">
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.2vw,17px);line-height:1.6;margin:0;color:#16181F">WALLET ADDRESS</h3>
+              <p style="font-size:20px;line-height:1.3;margin:0">Type your wallet address manually. No wallet is opened and no signature is requested.</p>
+              <input value="{{ wlW }}" onChange="{{ onW }}" placeholder="0x..." style="font-size:20px;padding:12px;background:#F7F1E5;color:#16181F;border:4px solid #16181F;width:100%;max-width:540px"></input>
+            </sc-if>
+            <sc-if value="{{ st3 }}">
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.2vw,17px);line-height:1.6;margin:0;color:#16181F">FOLLOW X</h3>
+              <p style="font-size:20px;line-height:1.3;margin:0">Follow the official MiNI BRoKER account to continue.</p>
+              <button onClick="{{ doFollow }}" style="font-size:10px;padding:12px 15px;background:#3BA3E8;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer;align-self:flex-start">FOLLOW ON X</button>
+            </sc-if>
+            <sc-if value="{{ st4 }}">
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.2vw,17px);line-height:1.6;margin:0;color:#16181F">PINNED POST</h3>
+              <p style="font-size:20px;line-height:1.3;margin:0">Like, repost and comment on the pinned post, then paste the link to your comment.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <button onClick="{{ doLike }}" style="font-size:10px;padding:12px 14px;background:{{ likeBg }};color:{{ likeFg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">LIKE</button>
+                <button onClick="{{ doRepost }}" style="font-size:10px;padding:12px 14px;background:{{ repostBg }};color:{{ repostFg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">REPOST</button>
+                <button onClick="{{ doComment }}" style="font-size:10px;padding:12px 14px;background:{{ commentBg }};color:{{ commentFg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">COMMENT</button>
+              </div>
+              <input value="{{ wlC }}" onChange="{{ onC }}" placeholder="link to your comment" style="font-size:20px;padding:12px;background:#F7F1E5;color:#16181F;border:4px solid #16181F;width:100%;max-width:540px"></input>
+            </sc-if>
+            <sc-if value="{{ st5 }}">
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.2vw,17px);line-height:1.6;margin:0;color:#16181F">SOCIAL CARD</h3>
+              <p style="font-size:20px;line-height:1.3;margin:0">Your MiNI BRoKER WhiteList card. The artwork and color are assigned to you and stay the same.</p>
+              <div style="background:{{ cardColor }};border:5px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(14px,2.4vw,22px);width:100%;max-width:640px;display:flex;flex-direction:column;gap:clamp(14px,2.4vw,20px)">
+                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+                  <span style="font-family:'Press Start 2P',monospace;font-size:clamp(14px,2.6vw,22px);line-height:1.4;color:#16181F">MiNI BRoKER</span>
+                  <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.6vw,14px);line-height:1.5;padding:10px 12px;background:#16181F;color:#F7F1E5">WHITELIST</span>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:clamp(14px,2.6vw,24px);align-items:flex-start">
+                  <div role="img" aria-label="Assigned MiNI BRoKER artwork" style="width:clamp(120px,26vw,180px);aspect-ratio:1;flex:0 0 auto;border:4px solid #16181F;background-image:url({{ cardImg }});background-size:cover;image-rendering:pixelated"></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;min-width:min(100%,190px);flex:1">
+                    <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;color:#16181F">X USERNAME</span>
+                    <span style="font-size:clamp(22px,3vw,28px);line-height:1.1;color:#16181F">{{ cardUser }}</span>
+                    <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;margin-top:6px;color:#16181F">WALLET</span>
+                    <span style="font-size:clamp(19px,2.4vw,24px);line-height:1.1;color:#16181F">{{ cardWallet }}</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px">
+                      <span style="font-family:'Press Start 2P',monospace;font-size:clamp(9px,1.4vw,12px);line-height:1.6;padding:10px 12px;background:#16181F;color:#F7F1E5">JOINED</span>
+                      <span style="font-family:'Press Start 2P',monospace;font-size:clamp(9px,1.4vw,12px);line-height:1.6;padding:10px 12px;background:#EFBF2E;color:#16181F;border:3px solid #16181F">VERIFIED</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="height:4px;background:#16181F"></div>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+                  <span style="font-family:'Press Start 2P',monospace;font-size:clamp(9px,1.4vw,12px);line-height:1.6;color:#16181F">SEASON 01 MEMBER</span>
+                  <span style="font-family:'Press Start 2P',monospace;font-size:clamp(9px,1.4vw,12px);line-height:1.6;padding:10px 12px;background:#EFBF2E;color:#16181F;border:3px solid #16181F">APPROVED</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <button onClick="{{ dlCard }}" style="font-size:10px;padding:12px 14px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">DOWNLOAD CARD</button>
+                <button onClick="{{ shareCard }}" style="font-size:10px;padding:12px 14px;background:#3BA3E8;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">SHARE ON X</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ st6 }}">
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.2vw,17px);line-height:1.6;margin:0;color:#16181F">SHARE YOUR CARD ON X</h3>
+              <p style="font-size:20px;line-height:1.3;margin:0">Post your card on X, then submit the link to that post.</p>
+              <button onClick="{{ shareCard }}" style="font-size:10px;padding:12px 14px;background:#3BA3E8;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer;align-self:flex-start">SHARE ON X</button>
+              <input value="{{ wlP }}" onChange="{{ onP }}" placeholder="https://x.com/..." style="font-size:20px;padding:12px;background:#F7F1E5;color:#16181F;border:4px solid #16181F;width:100%;max-width:540px"></input>
+            </sc-if>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <button onClick="{{ wlNext }}" disabled="{{ wlBlocked }}" style="font-size:11px;padding:13px 17px;background:{{ nextBg }};color:{{ nextFg }};border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:{{ nextCursor }}">{{ nextLabel }}</button>
+              <sc-if value="{{ wlBlocked }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:19px;line-height:1.3;color:#E23B32">{{ wlHint }}</span>
+              </sc-if>
+            </div>
+          </div>
+          <p style="font-size:19px;line-height:1.3;margin:0">We never ask for a private key, seed phrase, password, email or wallet signature.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ wlDone }}">
+        <div style="position:relative;overflow:hidden;background:#33A155;border:5px solid #16181F;box-shadow:10px 10px 0 #16181F;padding:clamp(22px,4.5vw,44px);text-align:center">
+          <div style="position:absolute;left:50%;top:70%;transform:rotate(0deg)"><div style="width:12px;height:12px;background:#EFBF2E;animation:mbshoot 1s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:70%;transform:rotate(60deg)"><div style="width:12px;height:12px;background:#E23B32;animation:mbshoot 1.1s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:70%;transform:rotate(120deg)"><div style="width:12px;height:12px;background:#6E35CE;animation:mbshoot .9s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:70%;transform:rotate(180deg)"><div style="width:12px;height:12px;background:#3BA3E8;animation:mbshoot 1.2s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:70%;transform:rotate(240deg)"><div style="width:12px;height:12px;background:#E08A2E;animation:mbshoot 1.05s steps(6) infinite"></div></div>
+          <div style="position:absolute;left:50%;top:70%;transform:rotate(300deg)"><div style="width:12px;height:12px;background:#F7F1E5;animation:mbshoot .95s steps(6) infinite"></div></div>
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(15px,3.2vw,28px);line-height:1.5;margin:0 0 16px;color:#16181F;position:relative">CONGRATULATIONS</h3>
+          <p style="font-size:clamp(19px,2.3vw,23px);line-height:1.35;margin:0 0 18px;color:#16181F;position:relative">Your WhiteList registration is complete.<br></br>You have secured GTD eligibility.<br></br>Follow @MlNiBroker for future updates.<br></br>Keep notifications enabled so you do not miss important announcements.</p>
+          <button onClick="{{ goReferral }}" style="font-size:11px;padding:13px 17px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer;position:relative">OPEN YOUR REFERRAL</button>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showStaking }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">STAKING</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">The staking ecosystem is being prepared. It activates after the mint.</p>
+      <div style="background:#16181F;border:4px solid #EFBF2E;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,24px);text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center">
+        <span style="font-family:'Press Start 2P',monospace;font-size:clamp(11px,2vw,15px);line-height:1.6;color:#EFBF2E">STAKING ACTIVATES AFTER MINT</span>
+        <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.8;color:#F7F1E5">THIS SYSTEM IS NOT ACTIVE YET</span>
+        <button onClick="{{ openWallet }}" style="font-size:10px;padding:12px 15px;background:#EFBF2E;color:#16181F;border:4px solid #F7F1E5;box-shadow:5px 5px 0 #6E35CE;cursor:pointer">CONNECT WALLET</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7">
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">LOCK 5 DAYS</span>
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">WINDOW 14:00-18:00 UTC</span>
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">CYCLE 250-500-750-1000-2000</span>
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">TOTAL CAPACITY 5,000</span>
+      </div>
+      <p style="font-size:19px;line-height:1.3;margin:0">These numbers are informational only. Nothing on this page reads live chain data.</p>
+      <div style="position:relative">
+        <div style="filter:blur(5px);display:flex;flex-direction:column;gap:14px">
+          <div style="background:#FCF8EF;border:4px solid #16181F;padding:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;color:#E23B32">STEP 1 · CHOOSE TIER</span>
+            <span style="padding:12px 26px;background:#EFBF2E;border:3px solid #16181F"></span>
+            <span style="padding:12px 40px;background:#FCF8EF;border:3px solid #16181F"></span>
+          </div>
+          <div style="background:#FCF8EF;border:4px solid #16181F;padding:16px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;color:#E08A2E">STEP 2 · CHOOSE NFTs</span>
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <span style="width:74px;height:74px;background:#E23B32;border:4px solid #16181F"></span>
+              <span style="width:74px;height:74px;background:#3B5BE8;border:4px solid #16181F"></span>
+              <span style="width:74px;height:74px;background:#3BA3E8;border:4px solid #16181F"></span>
+              <span style="width:74px;height:74px;background:#F0A98A;border:4px solid #16181F"></span>
+              <span style="width:74px;height:74px;background:#EFBF2E;border:4px solid #16181F"></span>
+              <span style="width:74px;height:74px;background:#E23B32;border:4px solid #16181F"></span>
+            </div>
+          </div>
+          <div style="background:#FCF8EF;border:4px solid #16181F;padding:16px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;color:#33A155">STEP 3 · ACTIVATE STAKE</span>
+            <span style="height:34px;background:#33A155;border:3px solid #16181F"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+            <span style="height:56px;background:#3BA3E8;border:4px solid #16181F"></span>
+            <span style="height:56px;background:#33A155;border:4px solid #16181F"></span>
+            <span style="height:56px;background:#E23B32;border:4px solid #16181F"></span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px">
+            <span style="width:70px;height:34px;background:#E23B32;border:3px solid #16181F"></span>
+            <span style="width:70px;height:34px;background:#E08A2E;border:3px solid #16181F"></span>
+            <span style="width:70px;height:34px;background:#EFBF2E;border:3px solid #16181F"></span>
+            <span style="width:70px;height:34px;background:#33A155;border:3px solid #16181F"></span>
+            <span style="width:70px;height:34px;background:#3BA3E8;border:3px solid #16181F"></span>
+            <span style="width:70px;height:34px;background:#6E35CE;border:3px solid #16181F"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+            <span style="height:82px;background:#E08A2E;border:4px solid #16181F"></span>
+            <span style="height:82px;background:#6E35CE;border:4px solid #16181F"></span>
+          </div>
+        </div>
+        <div style="position:absolute;inset:0;background-color:rgba(198,196,190,.55);background-image:repeating-linear-gradient(0deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px),repeating-linear-gradient(90deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px);display:flex;align-items:center;justify-content:center;padding:14px">
+          <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.9vw,14px);line-height:1.7;text-align:center;color:#EFBF2E;background:#16181F;border:4px solid #EFBF2E;padding:13px 15px">DETAILS REVEALED AT LAUNCH</span>
+        </div>
+      </div>
+      <p style="font-size:19px;line-height:1.3;margin:0;color:#E23B32">Integration point: staking contract address and ABI required before this page can go live.</p>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showStack }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">MY STACK</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">Your personal stack view. It opens when wallet connection activates after the mint.</p>
+      <div style="background:#16181F;border:4px solid #3BA3E8;box-shadow:8px 8px 0 #16181F;padding:clamp(14px,2.6vw,22px);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+        <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.8vw,13px);line-height:1.7;color:#3BA3E8">WALLET NOT CONNECTED</span>
+        <button onClick="{{ openWallet }}" style="font-size:10px;padding:12px 15px;background:#3BA3E8;color:#16181F;border:4px solid #F7F1E5;box-shadow:5px 5px 0 #E23B32;cursor:pointer">CONNECT WALLET</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7">
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">SUPPLY 5,000</span>
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">SEASON 01</span>
+      </div>
+      <div style="position:relative">
+        <div style="filter:blur(5px);display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+          <div style="background:#3BA3E8;border:4px solid #16181F;padding:16px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#16181F">NEXT ROUND</span><div style="font-family:'Press Start 2P',monospace;font-size:14px;margin-top:10px;color:#16181F">••••••</div></div>
+          <div style="background:#33A155;border:4px solid #16181F;padding:16px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#16181F">EARNINGS</span><div style="font-family:'Press Start 2P',monospace;font-size:14px;margin-top:10px;color:#16181F">••••••</div></div>
+          <div style="background:#EFBF2E;border:4px solid #16181F;padding:16px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#16181F">VAULT</span><div style="font-family:'Press Start 2P',monospace;font-size:14px;margin-top:10px;color:#16181F">••••••</div></div>
+          <div style="background:#E08A2E;border:4px solid #16181F;padding:16px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#16181F">TRADING MARGIN</span><div style="font-family:'Press Start 2P',monospace;font-size:14px;margin-top:10px;color:#16181F">••••••</div></div>
+          <div style="background:#6E35CE;border:4px solid #16181F;padding:16px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#F7F1E5">STAKED NFTs</span><div style="font-family:'Press Start 2P',monospace;font-size:14px;margin-top:10px;color:#F7F1E5">••••••</div></div>
+          <div style="background:#E23B32;border:4px solid #16181F;padding:16px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#F7F1E5">REWARD STATUS</span><div style="font-family:'Press Start 2P',monospace;font-size:14px;margin-top:10px;color:#F7F1E5">••••••</div></div>
+        </div>
+        <div style="position:absolute;inset:0;background-color:rgba(198,196,190,.55);background-image:repeating-linear-gradient(0deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px),repeating-linear-gradient(90deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px);display:flex;align-items:center;justify-content:center;padding:14px">
+          <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.9vw,14px);line-height:1.7;text-align:center;color:#3BA3E8;background:#16181F;border:4px solid #3BA3E8;padding:13px 15px">LOCKED UNTIL AFTER MINT</span>
+        </div>
+      </div>
+      <p style="font-size:19px;line-height:1.3;margin:0;color:#E23B32">Integration point: wallet provider, NFT contract and staking contract required for real values.</p>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showTrading }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">TRADING</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">A future part of the MiNI BRoKER ecosystem. Not available yet.</p>
+      <div style="background:#16181F;border:4px solid #3BA3E8;box-shadow:8px 8px 0 #16181F;padding:clamp(14px,2.6vw,22px);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+        <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.8vw,13px);line-height:1.7;color:#3BA3E8">WALLET NOT CONNECTED</span>
+        <button onClick="{{ openWallet }}" style="font-size:10px;padding:12px 15px;background:#3BA3E8;color:#16181F;border:4px solid #F7F1E5;box-shadow:5px 5px 0 #E23B32;cursor:pointer">CONNECT WALLET</button>
+      </div>
+      <div style="position:relative">
+        <div style="filter:blur(5px);display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+            <span style="height:66px;background:#E08A2E;border:4px solid #16181F"></span>
+            <span style="height:66px;background:#EFBF2E;border:4px solid #16181F"></span>
+            <span style="height:66px;background:#33A155;border:4px solid #16181F"></span>
+            <span style="height:66px;background:#6E35CE;border:4px solid #16181F"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+            <span style="height:66px;background:#EFBF2E;border:4px solid #16181F"></span>
+            <span style="height:66px;background:#3BA3E8;border:4px solid #16181F"></span>
+            <span style="height:66px;background:#6E35CE;border:4px solid #16181F"></span>
+            <span style="height:66px;background:#E08A2E;border:4px solid #16181F"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+            <div style="background:#FCF8EF;border:4px solid #16181F;padding:16px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:10px">
+                <span style="flex:1;height:34px;background:#33A155;border:3px solid #16181F"></span>
+                <span style="flex:1;height:34px;background:#E23B32;border:3px solid #16181F"></span>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <span style="width:44px;height:28px;background:#FCF8EF;border:3px solid #16181F"></span>
+                <span style="width:44px;height:28px;background:#EFBF2E;border:3px solid #16181F"></span>
+                <span style="width:44px;height:28px;background:#FCF8EF;border:3px solid #16181F"></span>
+                <span style="width:44px;height:28px;background:#FCF8EF;border:3px solid #16181F"></span>
+              </div>
+              <span style="height:38px;background:#6E35CE;border:3px solid #16181F"></span>
+            </div>
+            <div style="background:#FCF8EF;border:4px solid #16181F;padding:16px;display:flex;flex-direction:column;gap:10px">
+              <span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">•••••• / ••••••</span>
+              <span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">•••••• / ••••••</span>
+              <span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">•••••• / ••••••</span>
+              <span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">•••••• / ••••••</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;inset:0;background-color:rgba(198,196,190,.55);background-image:repeating-linear-gradient(0deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px),repeating-linear-gradient(90deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px);display:flex;align-items:center;justify-content:center;padding:14px">
+          <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.9vw,14px);line-height:1.7;text-align:center;color:#3BA3E8;background:#16181F;border:4px solid #3BA3E8;padding:13px 15px">FUTURE ECOSYSTEM FEATURE</span>
+        </div>
+      </div>
+
+      <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,2.6vw,22px);display:flex;flex-direction:column;gap:14px">
+        <span style="font-family:'Press Start 2P',monospace;font-size:12px;line-height:1.7;color:#16181F">HOW IT WILL WORK</span>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#E23B32;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#F7F1E5">01</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">CONNECT WALLET</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#E08A2E;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">02</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">SELECT AN ASSET</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#EFBF2E;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">03</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">CHOOSE LONG OR SHORT</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#33A155;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#F7F1E5">04</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">SET POSITION PARAMETERS</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#3BA3E8;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">05</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">REVIEW THE POSITION</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#6E35CE;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#F7F1E5">06</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">CONFIRM THE TRADE</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#FCF8EF;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">07</span><span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F">TRACK THE POSITION</span></div>
+      </div>
+
+      <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,2.6vw,22px);display:flex;flex-direction:column;gap:14px">
+        <span style="font-family:'Press Start 2P',monospace;font-size:12px;line-height:1.7;color:#16181F">PLANNED ASSETS</span>
+        <p style="font-size:20px;line-height:1.3;margin:0">Assets the future trading interface is being prepared for.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px">
+          <sc-for list="{{ assets }}" as="a" hint-placeholder-count="14">
+            <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:4px 4px 0 #16181F;padding:11px;display:flex;align-items:center;gap:9px">
+              <span role="img" aria-label="{{ a.sym }}" style="width:32px;height:32px;flex:0 0 auto;background-color:{{ a.color }};background-image:url({{ a.logo }});background-size:contain;background-position:center;background-repeat:no-repeat;border:3px solid #16181F"></span>
+              <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.5;color:#16181F">{{ a.sym }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showReferral }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">REFER<span style="color:#E23B32">R</span>AL</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:680px">Every completed WhiteList participant gets a referral code. Three referrals who finish the whole WhiteList process make you GTD eligible.</p>
+
+      <sc-if value="{{ refLocked }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#16181F;border:4px solid #EFBF2E;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <span style="font-family:'Press Start 2P',monospace;font-size:clamp(11px,2vw,14px);line-height:1.6;color:#EFBF2E">COMPLETE WHITELIST FIRST</span>
+          <p style="font-size:20px;line-height:1.3;margin:0;color:#F7F1E5">Your referral code is issued the moment your WhiteList registration is complete.</p>
+          <button onClick="{{ goWhitelist }}" style="font-size:10px;padding:12px 15px;background:#EFBF2E;color:#16181F;border:4px solid #F7F1E5;box-shadow:5px 5px 0 #6E35CE;cursor:pointer">GO TO WHITELIST</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ refOpen }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E23B32">YOUR REFERRAL CODE</span>
+            <span style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,4.4vw,34px);line-height:1.4;color:#16181F;letter-spacing:3px;word-break:break-all">{{ myCode }}</span>
+          </div>
+          <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E23B32">YOUR REFERRAL LINK</span>
+            <span ref="{{ linkRef }}" style="font-size:21px;line-height:1.3;color:#16181F;word-break:break-all;overflow-wrap:anywhere;max-width:100%;user-select:all">{{ myLink }}</span>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <button onClick="{{ copyLink }}" style="font-size:10px;padding:13px 15px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">COPY LINK</button>
+              <sc-if value="{{ copied }}">
+                <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;padding:11px 12px;background:#33A155;color:#F7F1E5;border:3px solid #16181F">LINK COPIED</span>
+              </sc-if>
+              <sc-if value="{{ copyManual }}">
+                <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;padding:11px 12px;background:#EFBF2E;color:#16181F;border:3px solid #16181F">LINK SELECTED — PRESS COPY</span>
+              </sc-if>
+            </div>
+          </div>
+          <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:14px">
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E23B32">VALID REFERRALS</span>
+            <span style="font-family:'Press Start 2P',monospace;font-size:clamp(16px,3.4vw,26px);line-height:1.4;color:#16181F">{{ refCount }} / 3</span>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <sc-for list="{{ refSteps }}" as="r" hint-placeholder-count="3">
+                <div style="background:{{ r.bg }};border:4px solid #16181F;box-shadow:4px 4px 0 #16181F;height:30px"></div>
+              </sc-for>
+            </div>
+            <span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E23B32">GTD STATUS</span>
+            <span style="font-family:'Press Start 2P',monospace;font-size:clamp(11px,2vw,14px);line-height:1.6;padding:12px 14px;background:{{ gtdBg }};color:{{ gtdFg }};border:4px solid #16181F;align-self:flex-start">{{ gtdLabel }}</span>
+          </div>
+          <sc-if value="{{ gtdReached }}">
+            <div style="position:relative;overflow:hidden;background:#33A155;border:5px solid #16181F;box-shadow:10px 10px 0 #16181F;padding:clamp(20px,4vw,36px);text-align:center">
+              <div style="position:absolute;left:50%;top:70%;transform:rotate(0deg)"><div style="width:12px;height:12px;background:#EFBF2E;animation:mbshoot 1s steps(6) infinite"></div></div>
+              <div style="position:absolute;left:50%;top:70%;transform:rotate(90deg)"><div style="width:12px;height:12px;background:#E23B32;animation:mbshoot 1.1s steps(6) infinite"></div></div>
+              <div style="position:absolute;left:50%;top:70%;transform:rotate(180deg)"><div style="width:12px;height:12px;background:#6E35CE;animation:mbshoot .95s steps(6) infinite"></div></div>
+              <div style="position:absolute;left:50%;top:70%;transform:rotate(270deg)"><div style="width:12px;height:12px;background:#3BA3E8;animation:mbshoot 1.15s steps(6) infinite"></div></div>
+              <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(14px,3vw,26px);line-height:1.5;margin:0 0 12px;color:#16181F;position:relative">GTD ELIGIBLE</h3>
+              <p style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.8vw,13px);line-height:1.8;margin:0;color:#16181F;position:relative">3 VALID REFERRALS COMPLETE</p>
+            </div>
+          </sc-if>
+          <p style="font-size:19px;line-height:1.3;margin:0">A referral counts only after that participant finishes the entire WhiteList process. Link clicks and unfinished registrations do not count.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ refPending }}">
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(16px,3vw,22px)">
+          <p style="font-size:20px;line-height:1.3;margin:0">Referral records are stored separately from the WhiteList sheet. Add the Referral web app URL in Tweaks to activate live counting.</p>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showCollection }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">COLLECTION</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E23B32">SUPPLY</span><p style="font-size:26px;line-height:1.2;margin:8px 0 0">5,000 NFTs</p></div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#6E35CE">NETWORK</span><p style="font-size:26px;line-height:1.2;margin:8px 0 0">Robinhood Mainnet</p></div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#E08A2E">ART</span><p style="font-size:26px;line-height:1.2;margin:8px 0 0">Retro 8-bit pixel art</p></div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px"><span style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#33A155">MARKETPLACE</span><p style="font-size:26px;line-height:1.2;margin:8px 0 0">OpenSea only</p></div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showRoadmap }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">ROADMAP</h2>
+      <span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7;padding:11px 13px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F;align-self:flex-start">SEASON 01</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:14px">
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#E23B32;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#F7F1E5">01</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">MINT</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">A 5,000-NFT pixel collection. The WhiteList and GTD process is the pre-mint community entry.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">5,000 SUPPLY</span><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">GTD ENTRY</span></div>
+        </div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#6E35CE;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#F7F1E5">02</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">STAKING</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">NFT staking with a 5-day individual lock and a daily entry window. Informational only, not live.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">5 DAY LOCK</span><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">14:00-18:00 UTC</span><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">250-500-750-1000-2000</span><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">5,000 TOTAL</span></div>
+        </div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#E08A2E;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">03</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">MINT-FEE REFUND</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">A refund mechanism on the mint fee, separate from the Airdrop. No amount is fixed yet.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">SEPARATE FROM AIRDROP</span></div>
+        </div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#33A155;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#F7F1E5">04</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">AIRDROP</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">A separate future reward tied to staking. The amount is undisclosed.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">AMOUNT UNDISCLOSED</span></div>
+        </div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#3BA3E8;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">05</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">FUTURE TRADING</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">A planned trading interface with equities and crypto assets. Not live.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">14 PLANNED ASSETS</span><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">NOT LIVE</span></div>
+        </div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#EFBF2E;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">06</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">PIXEL COMMUNITY</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">Creative features for holders, including the Pixel Hunt game and the Pixel Art Studio.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">FIND THE BROKER</span><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">PIXEL ART STUDIO</span></div>
+        </div>
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#F7F1E5;border:3px solid #16181F;font-family:'Press Start 2P',monospace;font-size:9px;color:#16181F">07</span><span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#16181F">ECOSYSTEM EXPANSION</span></div>
+          <p style="font-size:20px;line-height:1.3;margin:0">Further expansion of the MiNI BRoKER ecosystem. Informational only.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6"><span style="padding:7px 9px;background:#F7F1E5;border:3px solid #16181F">INFORMATIONAL</span></div>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div style="filter:blur(6px);background:#FCF8EF;border:4px solid #16181F;padding:clamp(22px,4.5vw,40px);text-align:center">
+          <span style="font-family:'Press Start 2P',monospace;font-size:16px;line-height:1.6;color:#6E35CE">SEASON 02</span>
+          <p style="font-family:'Press Start 2P',monospace;font-size:13px;line-height:1.8;margin:14px 0 0;color:#16181F">•••••• •••••• ••••••</p>
+        </div>
+        <div style="position:absolute;inset:0;background-color:rgba(198,196,190,.5);background-image:repeating-linear-gradient(0deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px),repeating-linear-gradient(90deg,rgba(90,90,90,.30) 0 2px,transparent 2px 4px);display:flex;align-items:center;justify-content:center;padding:14px">
+          <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.9vw,14px);line-height:1.7;text-align:center;color:#6E35CE;background:#16181F;border:4px solid #6E35CE;padding:13px 15px">SEASON 02 — UNDISCLOSED</span>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showToken }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">$MINiBRKR</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">The MiNI BRoKER ecosystem includes a reward token, $MINiBRKR. Tokenomics, supply and contract details are not published yet.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7">
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">TOKEN $MINiBRKR</span>
+        <span style="padding:11px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F">CONTRACT NOT PUBLISHED</span>
+      </div>
+      <div>
+        <button disabled="{{ isTrue }}" style="font-size:11px;padding:13px 16px;background:#C6C2B8;color:#5F5B53;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:not-allowed">$MINiBRKR PAGE — SOON</button>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showCollabs }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">COL<span style="color:#E23B32">L</span>ABS</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">Projects and communities that have collaborated with MiNI BRoKER.</p>
+      <sc-if value="{{ collabsEmpty }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:8px 8px 0 #16181F;padding:clamp(18px,3.4vw,28px);display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7;color:#E23B32">NO COLLABS YET</span>
+          <p style="font-size:20px;line-height:1.3;margin:0">Collabs appear here as they are added.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ collabsReady }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(12px,2vw,18px)">
+          <sc-for list="{{ collabs }}" as="c">
+            <div style="background:#FCF8EF;border:4px solid #16181F;box-shadow:6px 6px 0 #16181F;padding:12px;display:flex;flex-direction:column;gap:10px;transition:transform .12s steps(2)" style-hover="transform:translate(-3px,-3px);box-shadow:9px 9px 0 #E23B32">
+              <div role="img" aria-label="{{ c.name }}" style="width:100%;aspect-ratio:1;border:4px solid #16181F;background-color:#F7F1E5;background-image:url({{ c.image }});background-size:cover;background-position:center"></div>
+              <span style="font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;color:#16181F;word-break:break-word;overflow-wrap:anywhere">{{ c.name }}</span>
+              <span style="font-size:20px;line-height:1.2;color:#16181F;word-break:break-word;overflow-wrap:anywhere">{{ c.handle }}</span>
+              <a href="{{ c.post }}" target="_blank" rel="noopener" style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;padding:11px 12px;background:#3BA3E8;color:#16181F;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F;text-align:center">VIEW POST</a>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ showSea }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.4vw,34px);line-height:1.4;margin:0;color:#16181F;letter-spacing:1px">OpenSea</h2>
+      <p style="font-size:clamp(18px,2vw,21px);line-height:1.3;margin:0;max-width:660px">MiNI BRoKER trades on OpenSea only. There is no internal marketplace.</p>
+      <div>
+        <sc-if value="{{ hasSeaUrl }}">
+          <a href="{{ seaUrl }}" target="_blank" rel="noopener" style="display:inline-block;font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6;padding:13px 16px;background:#3BA3E8;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F">VIEW ON OpenSea</a>
+        </sc-if>
+        <sc-if value="{{ noSeaUrl }}" hint-placeholder-val="{{ true }}">
+          <button disabled="{{ isTrue }}" style="font-size:11px;padding:13px 16px;background:#C6C2B8;color:#5F5B53;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:not-allowed">OpenSea COLLECTION — SOON</button>
+        </sc-if>
+      </div>
+    </section>
+  </sc-if>
+
+  <footer style="border-top:4px solid #16181F;padding-top:20px;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center">
+    <span style="font-family:'Press Start 2P',monospace;font-size:12px;line-height:1.6;color:#16181F">MiNI BRoKER</span>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <a href="https://x.com/MlNiBroker" target="_blank" rel="noopener" style="font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;padding:10px 12px;background:#FCF8EF;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F;color:#16181F">X</a>
+      <button onClick="{{ goWhitelist }}" style="font-size:10px;padding:10px 12px;background:#EFBF2E;color:#16181F;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F;cursor:pointer">WHITELIST</button>
+      <button onClick="{{ goRoadmap }}" style="font-size:10px;padding:10px 12px;background:#FCF8EF;color:#16181F;border:3px solid #16181F;box-shadow:4px 4px 0 #16181F;cursor:pointer">ROADMAP</button>
+    </div>
+  </footer>
+</div>
+
+<sc-if value="{{ walletModal }}">
+  <div onClick="{{ closeWallet }}" style="position:fixed;inset:0;z-index:90;background:rgba(22,24,31,.82);display:flex;align-items:center;justify-content:center;padding:18px">
+    <div style="background:#FCF8EF;border:5px solid #16181F;box-shadow:10px 10px 0 #16181F;padding:clamp(20px,4vw,32px);max-width:420px;text-align:center;animation:mbpop .16s steps(3) both">
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(14px,3vw,21px);line-height:1.5;margin:0 0 14px;color:#16181F">MINT FIRST</h3>
+      <p style="font-size:21px;line-height:1.3;margin:0 0 18px;color:#16181F">Wallet connection will be activated after the MiNI BRoKER mint is completed.</p>
+      <button onClick="{{ closeWallet }}" style="font-size:11px;padding:13px 22px;background:#EFBF2E;color:#16181F;border:4px solid #16181F;box-shadow:5px 5px 0 #16181F;cursor:pointer">OK</button>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;openseaUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Pending links&quot;,&quot;label&quot;:&quot;OpenSea collection URL&quot;},&quot;pinnedPostUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Pending links&quot;,&quot;label&quot;:&quot;Pinned post URL (falls back to X profile)&quot;},&quot;referralApiUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://script.google.com/macros/s/AKfycby9U_19PzuqfaSLxmTAlgaLSAAbCWyOUtoPyohvTSjmhw2zB8Q0NSMXijgPZahaG_n_/exec&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Referral + Collabs backend&quot;,&quot;label&quot;:&quot;Referral + Collabs web app URL (/exec)&quot;},&quot;siteDomain&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Referral + Collabs backend&quot;,&quot;label&quot;:&quot;Site domain for referral links (blank = current URL)&quot;}}">
+const NFT_IDS = Array.from({ length: 60 }, (_, i) => 91 + i);
+const nftSrc = (id) => 'uploads/nft/' + id + '.png';
+const PALETTE = [
+  { name: 'RED', hex: '#E23B32', fg: '#F7F1E5' },
+  { name: 'YELLOW', hex: '#EFBF2E', fg: '#16181F' },
+  { name: 'PURPLE', hex: '#6E35CE', fg: '#F7F1E5' },
+  { name: 'ORANGE', hex: '#E08A2E', fg: '#16181F' },
+  { name: 'SKY BLUE', hex: '#3BA3E8', fg: '#16181F' },
+  { name: 'GREEN', hex: '#33A155', fg: '#F7F1E5' },
+  { name: 'WARM WHITE', hex: '#F7F1E5', fg: '#16181F' }
+];
+const INK = '#16181F';
+const X_URL = 'https://x.com/MlNiBroker';
+// Existing bound Apps Script web app (most recently supplied). Do not create a new one.
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4WPYJc_udXklKFD98nOSLxmqBX5JDofGJs5_bmPlcOP3dY1y_eABzj3SNIUgNmopeHQ/exec';
+// Asset tiles use the uploaded logo files. Tile background matches each logo's own
+// artboard so nothing looks cropped or floating on the wrong field.
+const ASSETS = [
+  ['AAPL', 'uploads/AAPL.png', '#FFFFFF'],
+  ['MSFT', 'uploads/MSFT.png', '#FFFFFF'],
+  ['NVDA', 'uploads/NVDA.png', '#FFFFFF'],
+  ['AMZN', 'uploads/AMZN.png', '#FFFFFF'],
+  ['GOOGL', 'uploads/GOOGL.png', '#EFF3FA'],
+  ['META', 'uploads/META.png', '#EFF3FA'],
+  ['TSLA', 'uploads/TSLA.png', '#E31E24'],
+  ['PLTR', 'uploads/PLTR.png', '#16181F'],
+  ['AMD', 'uploads/AMD.png', '#16181F'],
+  ['GME', 'uploads/GME.png', '#16181F'],
+  ['SPCX', 'uploads/SPCX.png', '#000000'],
+  ['BTC', 'uploads/BTC.png', '#FFFFFF'],
+  ['ETH', 'uploads/ETH.png', '#FFFFFF'],
+  ['SOL', 'uploads/SOL.jpg', '#FFFFFF']
+];
+const NAV = [
+  ['Home', 'home'], ['NFTs', 'nfts'], ['WhiteList', 'whitelist'], ['Referral', 'referral'],
+  ['Collabs', 'collabs'], ['Staking', 'staking'], ['My Stack', 'mystack'], ['Trading', 'trading'],
+  ['Roadmap', 'roadmap'], ['Token', 'token'], ['OpenSea', 'opensea'],
+  ['FIND THE BROKER', 'hunt'], ['PIXEL ART STUDIO', 'studio']
+];
+// Separate Referral + Collabs web app (NOT the WhiteList script).
+const REFERRAL_API_URL = 'https://script.google.com/macros/s/AKfycby9U_19PzuqfaSLxmTAlgaLSAAbCWyOUtoPyohvTSjmhw2zB8Q0NSMXijgPZahaG_n_/exec';
+const REF_CHARS = 'ACDEFHJKLMNPQRTUVWXY34679';
+const REF_RE = /^[A-Z0-9]{6}$/;
+const GTD_TARGET = 3;
+const localCode = () => {
+  let c = '';
+  for (let i = 0; i < 6; i++) c += REF_CHARS.charAt(Math.floor(Math.random() * REF_CHARS.length));
+  return c;
+};
+const WL_LABELS = ['X USERNAME', 'WALLET', 'FOLLOW X', 'PINNED POST', 'SOCIAL CARD', 'SHARE POST'];
+const shuffle = (a) => {
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = r[i]; r[i] = r[j]; r[j] = t;
+  }
+  return r;
+};
+
+class Component extends DCLogic {
+  state = {
+    view: 'home',
+    hist: [],
+    menuOpen: false,
+    walletModal: false,
+    w: 1200,
+    wl: { stage: 1, x: '', wallet: '', comment: '', post: '', like: false, repost: false, comm: false, follow: false, done: false },
+    card: null,
+    game: null,
+    cells: new Array(256).fill(''),
+    brush: '#E23B32',
+    sig: '',
+    myCode: '',
+    refCount: 0,
+    copied: false,
+    collabs: null
+  };
+
+  componentDidMount() {
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onResize);
+    this.onUp = () => { this.painting = false; };
+    window.addEventListener('mouseup', this.onUp);
+    window.addEventListener('touchend', this.onUp);
+    this.captureRef();
+    const myCode = this.readStore('mb_my_ref_code') || '';
+    this.setState({
+      w: window.innerWidth,
+      game: this.freshGame(),
+      card: this.loadCard(),
+      myCode,
+      wl: { ...this.state.wl, done: this.readStore('mb_wl_done') === '1' }
+    });
+    if (myCode) this.refreshRefStatus(myCode);
+    this.loadCollabs();
+  }
+
+  /* ---------- referral plumbing (separate backend from WhiteList) ---------- */
+  readStore(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  writeStore(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+
+  // ?ref=CODE opens the normal Home page and is captured silently.
+  captureRef() {
+    let code = '';
+    try {
+      code = String(new URLSearchParams(window.location.search).get('ref') || '').toUpperCase().trim();
+    } catch (e) { code = ''; }
+    if (!REF_RE.test(code)) return;
+    // Never overwrite an attribution that is already held.
+    if (!this.readStore('mb_ref_from')) this.writeStore('mb_ref_from', code);
+  }
+
+  refApi() { return String(this.props.referralApiUrl || REFERRAL_API_URL).trim(); }
+
+  siteBase() {
+    const custom = String(this.props.siteDomain || '').trim();
+    if (custom) return custom.replace(/\/+$/, '') + '/';
+    try { return window.location.origin + window.location.pathname; } catch (e) { return ''; }
+  }
+
+  async refPost(payload) {
+    const url = this.refApi();
+    if (!url) return null;
+    try {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      return await r.json();
+    } catch (e) { return null; }
+  }
+
+  async refreshRefStatus(code) {
+    const url = this.refApi();
+    if (!url || !code) return;
+    try {
+      const r = await fetch(url + '?action=status&code=' + encodeURIComponent(code));
+      const j = await r.json();
+      if (j && j.status === 'success') this.setState({ refCount: Number(j.validReferrals) || 0 });
+    } catch (e) {}
+  }
+
+  async loadCollabs() {
+    const url = this.refApi();
+    if (!url) { this.setState({ collabs: [] }); return; }
+    try {
+      const r = await fetch(url + '?action=collabs');
+      const j = await r.json();
+      const list = (j && j.collabs) || [];
+      this.setState({ collabs: list.filter((c) => c && c.name) });
+    } catch (e) { this.setState({ collabs: [] }); }
+  }
+
+  // Called once the WhiteList flow is fully complete: issues this participant's
+  // own code and credits the referrer who brought them in.
+  async afterWhitelistComplete() {
+    this.writeStore('mb_wl_done', '1');
+    const w = this.state.wl;
+    const from = this.readStore('mb_ref_from') || '';
+
+    if (REF_RE.test(from)) {
+      await this.refPost({
+        action: 'completeReferral',
+        referralCode: from,
+        referredXUsername: w.x.trim(),
+        referredWallet: w.wallet.trim()
+      });
+    }
+
+    let code = this.readStore('mb_my_ref_code') || '';
+    const issued = await this.refPost({
+      action: 'createCode',
+      xUsername: w.x.trim(),
+      walletAddress: w.wallet.trim()
+    });
+    if (issued && issued.code && REF_RE.test(String(issued.code))) {
+      code = String(issued.code).toUpperCase();
+      this.setState({ refCount: Number(issued.validReferrals) || 0 });
+    } else if (!code) {
+      code = localCode(); // offline placeholder until the web app URL is set
+    }
+    this.writeStore('mb_my_ref_code', code);
+    this.setState({ myCode: code });
+  }
+
+  flashCopied(ok) {
+    this.setState({ copied: ok ? 'ok' : 'manual' });
+    window.clearTimeout(this._copyT);
+    this._copyT = window.setTimeout(() => this.setState({ copied: false }), 2600);
+  }
+
+  // execCommand is tried first: the async clipboard API is blocked inside
+  // sandboxed/embedded frames, where it rejects without copying anything.
+  legacyCopy(link) {
+    const ta = document.createElement('textarea');
+    ta.value = link;
+    ta.setAttribute('readonly', 'readonly');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.width = '1px';
+    ta.style.height = '1px';
+    ta.style.padding = '0';
+    ta.style.border = 'none';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    let ok = false;
+    try {
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, link.length);
+      ok = document.execCommand('copy');
+    } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  selectLinkText() {
+    const el = this.linkEl;
+    if (!el || !window.getSelection) return;
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (e) {}
+  }
+
+  copyLink(link) {
+    if (!link) return;
+    if (this.legacyCopy(link)) { this.flashCopied(true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(link).then(
+        () => this.flashCopied(true),
+        () => { this.selectLinkText(); this.flashCopied(false); }
+      );
+      return;
+    }
+    this.selectLinkText();
+    this.flashCopied(false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('mouseup', this.onUp);
+    window.removeEventListener('touchend', this.onUp);
+  }
+
+  go(v) {
+    this.setState((s) => ({ view: v, hist: s.view === v ? s.hist : [...s.hist, s.view], menuOpen: false }));
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
+  }
+  back() {
+    this.setState((s) => {
+      const h = s.hist.slice();
+      const prev = h.pop() || 'home';
+      return { view: prev, hist: h, menuOpen: false };
+    });
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
+  }
+
+  // The assignment is per participant (keyed on the wallet), not per browser: a
+  // different wallet gets a freshly drawn artwork and color, and once drawn that
+  // pair never changes for that wallet.
+  ensureCard(wallet) {
+    const w = String(wallet || '').trim().toLowerCase();
+    const cur = this.state.card;
+    if (cur && cur.wallet === w) return;
+    let saved = null;
+    try { saved = JSON.parse(window.localStorage.getItem('mb_social_card_v2') || 'null'); } catch (e) {}
+    if (saved && saved.img && saved.color && saved.wallet === w) {
+      this.setState({ card: saved });
+      return;
+    }
+    const made = {
+      img: NFT_IDS[Math.floor(Math.random() * NFT_IDS.length)],
+      color: PALETTE[Math.floor(Math.random() * PALETTE.length)].hex,
+      wallet: w
+    };
+    try { window.localStorage.setItem('mb_social_card_v2', JSON.stringify(made)); } catch (e) {}
+    this.setState({ card: made });
+  }
+
+  loadCard() {
+    let saved = null;
+    // v2 key holds {img, color, wallet}. Pre-restyle assignments (old key) are
+    // never reused: their colors are outside the current seven-color system.
+    try { saved = JSON.parse(window.localStorage.getItem('mb_social_card_v2') || 'null'); } catch (e) { saved = null; }
+    if (saved && saved.img && saved.color) return saved;
+    const made = {
+      img: NFT_IDS[Math.floor(Math.random() * NFT_IDS.length)],
+      color: PALETTE[Math.floor(Math.random() * PALETTE.length)].hex,
+      wallet: ''
+    };
+    try { window.localStorage.setItem('mb_social_card_v2', JSON.stringify(made)); } catch (e) {}
+    return made;
+  }
+  shortWallet(a) {
+    const v = String(a || '').trim();
+    if (v.length < 10) return v;
+    return v.slice(0, 5) + '...' + v.slice(-3);
+  }
+  // Landscape WhiteList card: 1680x960 (2x of the 840x480 reference layout).
+  async downloadCard() {
+    const card = this.state.card || this.loadCard();
+    const W = 1680, H = 960, S = 2;
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.imageSmoothingEnabled = false;
+
+    const px = (t, size, cx, cy, col, align) => {
+      x.fillStyle = col;
+      x.font = size * S + 'px "Press Start 2P", monospace';
+      x.textAlign = align || 'left';
+      x.textBaseline = 'middle';
+      x.fillText(t, cx * S, cy * S);
+    };
+    const vt = (t, size, cx, cy, col) => {
+      x.fillStyle = col;
+      x.font = size * S + 'px "VT323", monospace';
+      x.textAlign = 'left';
+      x.textBaseline = 'middle';
+      x.fillText(t, cx * S, cy * S);
+    };
+    const box = (bx, by, bw, bh, fill, border) => {
+      if (border) { x.fillStyle = border; x.fillRect(bx * S, by * S, bw * S, bh * S); }
+      x.fillStyle = fill;
+      const i = border ? 3 : 0;
+      x.fillRect((bx + i) * S, (by + i) * S, (bw - i * 2) * S, (bh - i * 2) * S);
+    };
+    const chip = (t, bx, by, bw, bh, fill, fg, border) => {
+      box(bx, by, bw, bh, fill, border);
+      px(t, 12, bx + bw / 2, by + bh / 2 + 1, fg, 'center');
+    };
+
+    x.fillStyle = INK; x.fillRect(0, 0, W, H);
+    x.fillStyle = card.color; x.fillRect(5 * S, 5 * S, (840 - 10) * S, (480 - 10) * S);
+
+    px('MiNI BRoKER', 22, 36, 48, INK);
+    chip('WHITELIST', 626, 36, 178, 38, INK, '#F7F1E5');
+
+    box(32, 90, 208, 208, INK);
+    try {
+      const img = new Image();
+      img.src = nftSrc(card.img);
+      await (img.decode ? img.decode() : new Promise((r) => { img.onload = r; img.onerror = r; }));
+      x.drawImage(img, 36 * S, 94 * S, 200 * S, 200 * S);
+    } catch (e) {}
+
+    px('X USERNAME', 10, 270, 105, INK);
+    vt(String(this.state.wl.x || '@username'), 30, 270, 133, INK);
+    px('WALLET', 10, 270, 181, INK);
+    vt(this.shortWallet(this.state.wl.wallet) || '0x000...000', 26, 270, 209, INK);
+
+    chip('JOINED', 270, 246, 150, 38, INK, '#F7F1E5');
+    chip('VERIFIED', 436, 246, 170, 38, '#EFBF2E', INK, INK);
+
+    x.fillStyle = INK; x.fillRect(36 * S, 372 * S, 768 * S, 4 * S);
+    px('SEASON 01 MEMBER', 12, 36, 410, INK);
+    chip('APPROVED', 706, 392, 98, 38, '#EFBF2E', INK, INK);
+
+    const a = document.createElement('a');
+    a.href = c.toDataURL('image/png');
+    a.download = 'mini-broker-whitelist-card.png';
+    a.click();
+  }
+  shareCard() {
+    const text = 'I joined the MiNI BRoKER WhiteList. @MlNiBroker';
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener');
+  }
+
+  wlValid(stage) {
+    const w = this.state.wl;
+    if (stage === 1) return w.x.trim().replace('@', '').length >= 2;
+    if (stage === 2) return /^0x[a-fA-F0-9]{40}$/.test(w.wallet.trim());
+    if (stage === 3) return w.follow;
+    if (stage === 4) return w.like && w.repost && w.comm && /x\.com\//i.test(w.comment.trim());
+    if (stage === 5) return true;
+    if (stage === 6) return /^https?:\/\/(www\.)?x\.com\/.+/i.test(w.post.trim());
+    return false;
+  }
+  wlHintText(stage) {
+    if (stage === 1) return 'Enter your X username to continue.';
+    if (stage === 2) return 'Enter a valid wallet address (0x + 40 characters).';
+    if (stage === 3) return 'Use the FOLLOW ON X button to continue.';
+    if (stage === 4) return 'Complete all three actions and paste your comment link.';
+    if (stage === 6) return 'Paste a valid x.com post link.';
+    return '';
+  }
+  wlNext() {
+    const st = this.state.wl.stage;
+    if (!this.wlValid(st)) return;
+    if (st === 6) {
+      this.submitWl();
+      this.afterWhitelistComplete();
+      this.setState((s) => ({ wl: { ...s.wl, done: true } }));
+      if (typeof window !== 'undefined') window.scrollTo(0, 0);
+      return;
+    }
+    if (st === 2) this.ensureCard(this.state.wl.wallet);
+    this.setState((s) => ({ wl: { ...s.wl, stage: s.wl.stage + 1 } }));
+  }
+  submitWl() {
+    const w = this.state.wl;
+    const card = this.state.card || {};
+    try {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          xUsername: w.x.trim(),
+          walletAddress: w.wallet.trim(),
+          commentLink: w.comment.trim(),
+          socialCardImage: card.img ? String(card.img) : '',
+          socialCardColor: card.color || '',
+          socialPostLink: w.post.trim()
+        })
+      });
+    } catch (e) {}
+  }
+  setWl(k, v) { this.setState((s) => ({ wl: { ...s.wl, [k]: v } })); }
+  openX(url) { window.open(url || X_URL, '_blank', 'noopener'); }
+
+  freshGame() {
+    const pool = shuffle(NFT_IDS).slice(0, 16);
+    const targets = shuffle(Array.from({ length: 16 }, (_, i) => i)).slice(0, 3);
+    return {
+      cards: pool.map((n, i) => ({ n, rev: false, target: targets.indexOf(i) > -1 })),
+      chances: 3, found: 0, won: false
+    };
+  }
+  flip(i) {
+    const g = this.state.game;
+    if (!g || g.won || g.chances <= 0 || g.cards[i].rev) return;
+    const cards = g.cards.map((c, j) => (j === i ? { ...c, rev: true } : c));
+    const found = g.found + (g.cards[i].target ? 1 : 0);
+    const chances = g.chances - 1;
+    this.setState({ game: { cards, found, chances, won: found === 3 } });
+  }
+
+  paint(i) {
+    this.setState((s) => {
+      if (s.cells[i] === s.brush) return null;
+      const cells = s.cells.slice();
+      cells[i] = s.brush;
+      return { cells };
+    });
+  }
+  onTouch(e) {
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    if (el && el.dataset && el.dataset.idx !== undefined) this.paint(Number(el.dataset.idx));
+  }
+  async downloadArt() {
+    if (!this.state.sig.trim()) return;
+    const S = 32, W = 512, H = 576;
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.imageSmoothingEnabled = false;
+    x.fillStyle = '#F7F1E5'; x.fillRect(0, 0, W, H);
+    this.state.cells.forEach((col, i) => {
+      if (!col) return;
+      x.fillStyle = col;
+      x.fillRect((i % 16) * S, Math.floor(i / 16) * S, S, S);
+    });
+    x.fillStyle = INK; x.fillRect(0, W, W, H - W);
+    x.fillStyle = '#F7F1E5';
+    x.font = '20px "VT323", monospace';
+    x.textAlign = 'left';
+    x.fillText(this.state.sig.trim(), 16, W + 40);
+    x.fillStyle = '#EFBF2E';
+    x.font = '12px "Press Start 2P", monospace';
+    x.textAlign = 'right';
+    x.fillText('@MlNiBroker', W - 16, W + 40);
+    const a = document.createElement('a');
+    a.href = c.toDataURL('image/png');
+    a.download = 'mini-broker-pixel-art.png';
+    a.click();
+  }
+
+  renderVals() {
+    const s = this.state;
+    const v = s.view;
+    const g = s.game;
+    const wl = s.wl;
+    const card = s.card || {};
+    const home = v === 'home';
+    const compact = s.w < 900;
+    const stage = wl.stage;
+    const blocked = !this.wlValid(stage);
+    const needSig = !s.sig.trim();
+    const seaUrl = (this.props.openseaUrl || '').trim();
+    const pinned = (this.props.pinnedPostUrl || '').trim() || X_URL;
+    const galleryIds = v === 'nfts' ? NFT_IDS : NFT_IDS.filter((_, i) => i % 2 === 0);
+    const strip = v === 'nfts' ? galleryIds : galleryIds.concat(galleryIds);
+
+    return {
+      navItems: NAV.map(([label, view]) => ({
+        label,
+        on: () => this.go(view),
+        bg: v === view ? '#EFBF2E' : '#16181F',
+        fg: v === view ? INK : '#F7F1E5',
+        bd: v === view ? '#EFBF2E' : '#F7F1E5'
+      })),
+      navInline: !compact,
+      navCompact: compact,
+      menuOpen: s.menuOpen,
+      toggleMenu: () => this.setState((p) => ({ menuOpen: !p.menuOpen })),
+      isInternal: !home,
+      back: () => this.back(),
+      walletModal: s.walletModal,
+      openWallet: () => this.setState({ walletModal: true, menuOpen: false }),
+      closeWallet: () => this.setState({ walletModal: false }),
+      goWhitelist: () => this.go('whitelist'),
+      goStaking: () => this.go('staking'),
+      goToken: () => this.go('token'),
+      goSea: () => this.go('opensea'),
+      goHunt: () => this.go('hunt'),
+      goStudio: () => this.go('studio'),
+      goRoadmap: () => this.go('roadmap'),
+      goReferral: () => this.go('referral'),
+
+      showHero: home,
+      showEntry: home,
+      showGallery: home || v === 'nfts',
+      galleryMarquee: home,
+      galleryGrid: v === 'nfts',
+      showCollection: home,
+      showRoadmap: home || v === 'roadmap',
+      showToken: home || v === 'token',
+      showSea: home || v === 'opensea',
+      showHunt: v === 'hunt',
+      showStudio: v === 'studio',
+      showWl: v === 'whitelist',
+      showStaking: v === 'staking',
+      showStack: v === 'mystack',
+      showTrading: v === 'trading',
+      showReferral: v === 'referral',
+      showCollabs: home || v === 'collabs',
+
+      refLocked: !wl.done,
+      refOpen: wl.done && !!s.myCode,
+      refPending: wl.done && !s.myCode,
+      myCode: s.myCode,
+      myLink: s.myCode ? this.siteBase() + '?ref=' + s.myCode : '',
+      refCount: s.refCount,
+      refSteps: [1, 2, 3].map((n) => ({ bg: s.refCount >= n ? '#33A155' : '#F7F1E5' })),
+      gtdReached: s.refCount >= GTD_TARGET,
+      gtdLabel: s.refCount >= GTD_TARGET ? 'ELIGIBLE' : 'NOT YET ELIGIBLE',
+      gtdBg: s.refCount >= GTD_TARGET ? '#33A155' : '#C6C2B8',
+      gtdFg: s.refCount >= GTD_TARGET ? '#F7F1E5' : '#16181F',
+      copied: s.copied === 'ok',
+      copyManual: s.copied === 'manual',
+      linkRef: (el) => { this.linkEl = el; },
+      copyLink: () => this.copyLink(s.myCode ? this.siteBase() + '?ref=' + s.myCode : ''),
+
+      collabs: (s.collabs || []).map((c) => ({
+        name: c.name,
+        handle: c.username ? (String(c.username).charAt(0) === '@' ? c.username : '@' + c.username) : '',
+        image: c.image || '',
+        post: c.post || X_URL
+      })),
+      collabsReady: !!(s.collabs && s.collabs.length),
+      collabsEmpty: !!(s.collabs && !s.collabs.length),
+
+      gallery: strip.map((id, i) => ({ src: nftSrc(id), id: '#' + id, key: i })),
+
+      chances: g ? g.chances : 3,
+      found: g ? g.found : 0,
+      huntWon: !!(g && g.won),
+      huntLost: !!(g && !g.won && g.chances <= 0),
+      newGame: () => this.setState({ game: this.freshGame() }),
+      huntCards: (g ? g.cards : Array.from({ length: 16 }, () => ({ n: 0, rev: false, target: false }))).map((c, i) => ({
+        rev: c.rev,
+        hidden: !c.rev,
+        src: nftSrc(c.n),
+        bg: c.rev ? '#FCF8EF' : '#EFBF2E',
+        tag: c.target ? 'BROKER' : '#' + c.n,
+        tagBg: c.target ? '#33A155' : '#FCF8EF',
+        tagFg: c.target ? '#F7F1E5' : INK,
+        on: () => this.flip(i)
+      })),
+
+      cells: s.cells.map((bg, i) => ({
+        i, bg: bg || '#F7F1E5',
+        down: () => { this.painting = true; this.paint(i); },
+        enter: () => { if (this.painting) this.paint(i); }
+      })),
+      swatches: PALETTE.concat([{ name: 'DARK', hex: INK }]).map((p) => ({
+        color: p.hex, on: () => this.setState({ brush: p.hex })
+      })),
+      setEraser: () => this.setState({ brush: '' }),
+      clearGrid: () => this.setState({ cells: new Array(256).fill('') }),
+      onTouch: (e) => this.onTouch(e),
+      sig: s.sig,
+      onSig: (e) => this.setState({ sig: e.target.value }),
+      needSig,
+      dlBg: needSig ? '#C6C2B8' : '#33A155',
+      dlFg: needSig ? '#5F5B53' : '#F7F1E5',
+      dlCursor: needSig ? 'not-allowed' : 'pointer',
+      downloadArt: () => this.downloadArt(),
+
+      wlActive: !wl.done,
+      wlDone: wl.done,
+      wlLabel: '0' + stage,
+      wlDots: [1, 2, 3, 4, 5, 6].map((n) => ({
+        num: '0' + n,
+        label: WL_LABELS[n - 1],
+        bg: n < stage ? '#33A155' : n === stage ? '#EFBF2E' : '#FCF8EF',
+        fg: n < stage ? '#F7F1E5' : INK
+      })),
+      st1: stage === 1, st2: stage === 2, st3: stage === 3,
+      st4: stage === 4, st5: stage === 5, st6: stage === 6,
+      wlX: wl.x, wlW: wl.wallet, wlC: wl.comment, wlP: wl.post,
+      onX: (e) => this.setWl('x', e.target.value),
+      onW: (e) => this.setWl('wallet', e.target.value),
+      onC: (e) => this.setWl('comment', e.target.value),
+      onP: (e) => this.setWl('post', e.target.value),
+      doFollow: () => { this.openX(X_URL); this.setWl('follow', true); },
+      doLike: () => { this.openX(pinned); this.setWl('like', true); },
+      doRepost: () => { this.openX(pinned); this.setWl('repost', true); },
+      doComment: () => { this.openX(pinned); this.setWl('comm', true); },
+      likeBg: wl.like ? '#33A155' : '#EFBF2E',
+      likeFg: wl.like ? '#F7F1E5' : INK,
+      repostBg: wl.repost ? '#33A155' : '#EFBF2E',
+      repostFg: wl.repost ? '#F7F1E5' : INK,
+      commentBg: wl.comm ? '#33A155' : '#EFBF2E',
+      commentFg: wl.comm ? '#F7F1E5' : INK,
+      wlNext: () => this.wlNext(),
+      wlBlocked: blocked,
+      wlHint: this.wlHintText(stage),
+      nextLabel: stage === 6 ? 'SUBMIT' : 'CONTINUE',
+      nextBg: blocked ? '#C6C2B8' : '#EFBF2E',
+      nextFg: blocked ? '#5F5B53' : INK,
+      nextCursor: blocked ? 'not-allowed' : 'pointer',
+      cardColor: card.color || '#EFBF2E',
+      cardImg: card.img ? nftSrc(card.img) : nftSrc(91),
+      cardUser: wl.x.trim() || '@username',
+      cardWallet: this.shortWallet(wl.wallet),
+      dlCard: () => this.downloadCard(),
+      shareCard: () => this.shareCard(),
+
+      assets: ASSETS.map(([sym, logo, color]) => ({ sym, logo, color })),
+
+      seaUrl,
+      hasSeaUrl: !!seaUrl,
+      noSeaUrl: !seaUrl,
+      isTrue: true
+    };
+  }
+}
+</script>
+</body>
+</html>
