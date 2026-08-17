@@ -7,7 +7,7 @@ window.MB_CONFIG = {
   openSeaUrl: '',
   // Optional $MINiBRKR token page. Empty keeps the button in its SOON state.
   tokenUrl: '',
-  xUrl: 'https://x.com/MlNiBroker',
+  xUrl: 'https://x.com/MlNiBroker/status/2089298201396281728',
   // Pinned post used by WhiteList task 04. Empty falls back to the X profile.
   pinnedPostUrl: '',
 
