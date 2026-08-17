@@ -14,7 +14,7 @@
   MB.show(MB.el('wl'), true);
   render();
 
-  function xUrl() { return CFG.xUrl || 'https://x.com/MlNiBroker'; }
+  function xUrl() { return CFG.xUrl || 'https://x.com/MlNiBroker/status/2089298201396281728'; }
   function pinned() { return (CFG.pinnedPostUrl && String(CFG.pinnedPostUrl).trim()) || xUrl(); }
   function openX(u) { window.open(u, '_blank', 'noopener'); }
 
