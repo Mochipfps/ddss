@@ -17,7 +17,7 @@ window.MB_CONFIG = {
   whitelistApi: 'https://script.google.com/macros/s/AKfycbz4WPYJc_udXklKFD98nOSLxmqBX5JDofGJs5_bmPlcOP3dY1y_eABzj3SNIUgNmopeHQ/exec',
   referralApi: 'https://script.google.com/macros/s/AKfycby9U_19PzuqfaSLxmTAlgaLSAAbCWyOUtoPyohvTSjmhw2zB8Q0NSMXijgPZahaG_n_/exec',
   // Separate GTD Claim web app. Paste the /exec URL from claim-apps-script.gs.
-  claimApi: 'https://script.google.com/macros/s/AKfycbwLCmhCGfIcvxFj_UQKko7dxVZKCnUW97k-ikF1TrpT7SrpzloqyPVyGAnPh-075ymT/exec',
+  claimApi: 'https://script.google.com/macros/s/AKfycbxiqbz5G5Gkgu71OzFvC74lpI0NHF7ho6BF_gJNye85L2EW3hTRNDliKqLTuMaGUF9l/exec',
 
   /* ---- GTD claim ---- */
   claim: {
