@@ -17,7 +17,10 @@ window.MB_CONFIG = {
   whitelistApi: 'https://script.google.com/macros/s/AKfycbz4WPYJc_udXklKFD98nOSLxmqBX5JDofGJs5_bmPlcOP3dY1y_eABzj3SNIUgNmopeHQ/exec',
   referralApi: 'https://script.google.com/macros/s/AKfycby9U_19PzuqfaSLxmTAlgaLSAAbCWyOUtoPyohvTSjmhw2zB8Q0NSMXijgPZahaG_n_/exec',
   // Separate GTD Claim web app. Paste the /exec URL from claim-apps-script.gs.
-  claimApi: 'https://script.google.com/macros/s/AKfycbxiqbz5G5Gkgu71OzFvC74lpI0NHF7ho6BF_gJNye85L2EW3hTRNDliKqLTuMaGUF9l/exec',
+  claimApi: 'https://script.google.com/macros/s/AKfycbwLCmhCGfIcvxFj_UQKko7dxVZKCnUW97k-ikF1TrpT7SrpzloqyPVyGAnPh-075ymT/exec',
+
+  /* ---- staking schedule (display only; the contract remains authoritative) ---- */
+  staking: { windowOpenUtcHour: 14, windowCloseUtcHour: 18, lockDays: 5, totalCapacity: 5000 },
 
   /* ---- GTD claim ---- */
   claim: {
@@ -69,8 +72,11 @@ window.MB_CONFIG = {
     countdownStart: '2026-08-20T13:30:00Z',
     // Trading stays disabled until this moment.
     activation: '2026-08-22T18:00:00Z',
-    // Step 5 sets this to true to publish the countdown and activation state.
-    // While false, every public time display reads UPCOMING.
-    reveal: false
+    // Step 5: live. The countdown is published.
+    reveal: true,
+    // Set true only once a real trading interface is implemented. While false,
+    // the page stays in its disabled state even after activation has passed —
+    // the clock alone never announces that trading is open.
+    live: false
   }
 };
