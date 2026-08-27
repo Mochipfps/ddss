@@ -22,7 +22,7 @@
       msg.textContent = 'Stake data is temporarily unavailable. Please try again shortly.';
       return;
     }
-    msg.textContent = 'Loading your stake...';
+    msg.textContent = 'LOADING YOUR STAKE...';
     grid.innerHTML = '';
 
     var images = {};
@@ -81,13 +81,18 @@
                 '<span class="card__chip" style="background:var(--purple);color:var(--cream);align-self:flex-start">STAKED</span>' +
               '</div>' +
             '</div>' +
-            line('STAKED', 'UPCOMING') +
-            line('UNLOCKS', 'UPCOMING') +
-            line('LOCK LEFT', 'UPCOMING') +
+            line('STAKED', staked ? CH.utc(staked) : '——') +
+            line('UNLOCKS', r.unlock ? CH.utc(r.unlock) : '——') +
+            '<div class="row" style="justify-content:space-between;gap:10px">' +
+              '<span class="pixel" style="font-size:9px;line-height:1.7">LOCK LEFT</span>' +
+              '<span class="txt" style="text-align:right" data-lock="' + MB.esc(r.id) + '" data-until="' +
+                (r.unlock ? Number(r.unlock) : '') + '">' +
+                (r.remaining == null ? '——' : (Number(r.remaining) > 0 ? CH.dur(r.remaining) : 'UNLOCKED')) +
+              '</span></div>' +
             '<div class="hr"></div>' +
             '<div class="row" style="gap:8px">' +
               '<button class="btn ' + (r.canUnstake === true ? 'btn--green' : 'btn--off') + '" data-act="unstake" data-id="' + MB.esc(r.id) + '"' +
-                (r.canUnstake === true ? '' : ' disabled') + '>UNSTAKE</button>' +
+                (r.canUnstake === true ? '' : ' disabled') + '>' + (r.canUnstake === true ? 'UNSTAKE' : 'LOCKED') + '</button>' +
               claim('reward', 'CLAIM REWARD', r.reward) +
               claim('refund', 'CLAIM REFUND', r.refund) +
               claim('airdrop', 'CLAIM AIRDROP', r.airdrop) +
@@ -95,10 +100,30 @@
             '<p class="note note--red" data-msg="' + MB.esc(r.id) + '"></p>' +
             '</div>';
         }).join('');
+        startClocks();
       })
       .catch(function () {
         msg.textContent = 'Stake data is temporarily unavailable. Please try again shortly.';
       });
+  }
+
+  // Each staked NFT counts down from its own unlockTime — never one shared timer.
+  var iv = null;
+  function startClocks() {
+    if (iv) window.clearInterval(iv);
+    iv = window.setInterval(function () {
+      var nodes = grid.querySelectorAll('[data-lock]');
+      var expired = false;
+      Array.prototype.forEach.call(nodes, function (n) {
+        var until = Number(n.getAttribute('data-until'));
+        if (!until) return;
+        var left = until - Math.floor(Date.now() / 1000);
+        if (left > 0) { n.textContent = CH.dur(left); return; }
+        if (n.textContent !== 'UNLOCKED') { n.textContent = 'UNLOCKED'; expired = true; }
+      });
+      // A lock just elapsed: re-read so UNSTAKE reflects the contract.
+      if (expired) load();
+    }, 1000);
   }
 
   var FN = { unstake: 'unstake', reward: 'claimReward', refund: 'claimRefund', airdrop: 'claimAirdrop' };
@@ -128,6 +153,14 @@
       b.disabled = false;
       if (note) note.textContent = CH.message(er);
     });
+  });
+
+  var rb = MB.el('ms-refresh');
+  if (rb) rb.addEventListener('click', function () {
+    var b = this;
+    b.disabled = true;
+    load();
+    window.setTimeout(function () { b.disabled = false; }, 1200);
   });
 
   CH.on(load);
