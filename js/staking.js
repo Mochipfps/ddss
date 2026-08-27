@@ -33,20 +33,47 @@
       ]);
     }).then(function (r) {
       var sysOn = r[0], stakeOn = r[1], winOpen = r[2];
+      // The contract decides; the clock only labels and counts down.
+      var sched = CH.schedule();
       var open = winOpen === true && stakeOn !== false && sysOn !== false;
+      if (winOpen == null) open = sched.open && stakeOn !== false && sysOn !== false;
       window.__mbWindowOpen = open;
+
+      var cap = (MB.cfg.staking || {}).totalCapacity || 5000;
+      var lock = (MB.cfg.staking || {}).lockDays || 5;
+      var day = CH.num(r[3]);
       statusGrid.innerHTML =
-        tile('STAKING', 'UPCOMING') +
-        tile('CURRENT DAY', CH.dash(CH.num(r[3]))) +
-        tile('DAILY CAPACITY', CH.dash(CH.num(r[4]))) +
+        tile('STAKING', open ? 'OPEN' : 'CLOSED') +
+        '<div class="panel panel--flat"><span class="pixel" style="font-size:10px;line-height:1.7;color:var(--red)">' +
+          (sched.open ? 'CLOSES IN' : 'OPENS IN') +
+          '</span><div class="pixel" id="st-clock" style="font-size:14px;margin-top:10px">' + CH.dur(sched.until) + '</div></div>' +
+        tile('CURRENT DAY', day == null ? '——' : (day > 0 ? 'DAY ' + day : 'NOT STARTED')) +
+        tile("TODAY'S LIMIT", CH.dash(CH.num(r[4]))) +
         tile('STAKED TODAY', CH.dash(CH.num(r[5]))) +
         tile('REMAINING TODAY', CH.dash(CH.num(r[6]))) +
         tile('TOTAL STAKED', CH.dash(CH.num(r[7]) != null ? CH.num(r[7]) : CH.num(r[8]))) +
+        tile('TOTAL CAPACITY', cap.toLocaleString()) +
+        tile('STAKING WINDOW', '14:00-18:00 UTC') +
+        tile('LOCK PERIOD', lock + ' DAYS') +
         tile('SEASON', r[9] === true ? 'COMPLETE' : (r[9] === false ? 'IN PROGRESS' : '——'));
+      startClock();
       refreshActions();
     }).catch(function () {
       unavailable('Live staking values are temporarily unavailable. Please try again shortly.');
     });
+  }
+
+  // One local ticker between authoritative reads: no per-second chain calls.
+  var clockIv = null, lastOpen = null;
+  function startClock() {
+    if (clockIv) window.clearInterval(clockIv);
+    lastOpen = CH.schedule().open;
+    clockIv = window.setInterval(function () {
+      var s = CH.schedule();
+      var el = MB.el('st-clock');
+      if (el) el.textContent = CH.dur(s.until);
+      if (s.open !== lastOpen) { lastOpen = s.open; loadStatus(); }
+    }, 1000);
   }
 
   /* ---- owned NFTs ---- */
@@ -65,20 +92,26 @@
       MB.show(MB.el('st-actions'), false);
       return;
     }
-    msg.textContent = 'Loading your NFTs...';
+    msg.textContent = 'LOADING YOUR MINI BROKER NFTs...';
     grid.innerHTML = '';
     CH.ownedNfts(CH.account).then(function (list) {
       owned = list;
       selected = {};
       if (!list.length) {
-        msg.textContent = 'No MiNI BRoKER NFTs found in this wallet.';
+        // A successful query with zero results is never an error state.
+        msg.textContent = 'NO MINI BROKER NFTs FOUND IN THIS WALLET.';
         MB.show(MB.el('st-actions'), false);
         return;
       }
       msg.textContent = list.length + (list.length === 1 ? ' NFT found.' : ' NFTs found.');
       return markStaked(list).then(draw);
     }).catch(function () {
-      msg.textContent = 'NFT data is temporarily unavailable. Please try again shortly.';
+      // Every endpoint failed: distinct from "zero NFTs", and retryable.
+      msg.innerHTML = 'NFT DATA TEMPORARILY UNAVAILABLE ' +
+        '<button class="btn btn--sm" id="st-retry" style="margin-left:10px">RETRY</button>';
+      var r = MB.el('st-retry');
+      if (r) r.addEventListener('click', loadNfts);
+      MB.show(MB.el('st-actions'), false);
     });
   }
 
@@ -130,7 +163,7 @@
     b.classList.toggle('btn--green', can);
     b.textContent = ids.length > 1 ? 'STAKE ' + ids.length + ' SELECTED' : 'STAKE SELECTED';
     MB.el('st-sel').textContent = !open
-      ? 'Staking is UPCOMING.'
+      ? 'Staking is currently closed.'
       : (ids.length ? ids.length + (ids.length === 1 ? ' NFT selected.' : ' NFTs selected.') : 'Select one or more available NFTs.');
   }
 
@@ -143,7 +176,22 @@
     msg.textContent = 'Confirm in your wallet...';
 
     var staking = (CFG.contracts || {}).staking;
-    CH.nftWrite().then(function (nft) {
+    // Pre-flight against live contract state so the wallet is never opened for
+    // a transaction the contract would reject.
+    CH.stakingRead().then(function (c) {
+      return Promise.all([
+        CH.safe(c, 'isSystemEnabled'), CH.safe(c, 'isStakingEnabled'),
+        CH.safe(c, 'isStakingWindowOpen'), CH.safe(c, 'remainingTodayCapacity'),
+        CH.safe(c, 'seasonComplete')
+      ]).then(function (r) {
+        if (r[4] === true) throw new Error('season complete');
+        if (r[0] === false || r[1] === false) throw new Error('staking closed');
+        if (r[2] === false) throw new Error('staking window closed');
+        if (r[3] != null && Number(r[3]) < ids.length) throw new Error('capacity full');
+      });
+    }).then(function () {
+      return CH.nftWrite();
+    }).then(function (nft) {
       return nft.isApprovedForAll(CH.account, staking).then(function (ok) {
         if (ok) return null;
         msg.textContent = 'Approve the staking contract in your wallet...';
@@ -179,6 +227,15 @@
       msg.textContent = CH.message(e);
       refreshActions();
     });
+  });
+
+  var rb = MB.el('st-refresh');
+  if (rb) rb.addEventListener('click', function () {
+    var b = this;
+    b.disabled = true;
+    loadStatus();
+    loadNfts();
+    window.setTimeout(function () { b.disabled = false; }, 1200);
   });
 
   CH.on(function () { loadStatus(); loadNfts(); });
