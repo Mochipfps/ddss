@@ -304,24 +304,90 @@
       CH.emit();
     },
 
-    /* ---- plain-language errors: never a raw revert or RPC dump ---- */
+    /* ---- plain-language errors ----
+       The deployed contract uses custom errors, so the error NAME is matched
+       first; raw revert data, RPC and endpoint detail is never surfaced. */
+    ERRORS: {
+      StakingWindowClosed: 'STAKING WINDOW CLOSED',
+      StakingIsDisabled: 'STAKING IS CURRENTLY UNAVAILABLE',
+      SystemIsDisabled: 'STAKING IS CURRENTLY UNAVAILABLE',
+      EmergencyPausedActive: 'STAKING IS CURRENTLY PAUSED',
+      DailyCapacityReached: "TODAY'S CAPACITY FULL",
+      TotalCapacityReached: 'SEASON STAKING COMPLETE',
+      AlreadyStaked: 'NFT ALREADY STAKED',
+      NotStaked: 'THAT NFT IS NOT STAKED',
+      NotStaker: 'THAT NFT IS NOT STAKED BY THIS WALLET',
+      StillLocked: 'NFT STILL LOCKED',
+      InvalidNFT: 'THAT NFT IS NOT PART OF THIS COLLECTION',
+      RewardNotAvailable: 'REWARD IS NOT CURRENTLY AVAILABLE',
+      RewardAlreadyClaimed: 'REWARD ALREADY CLAIMED',
+      RefundNotAvailable: 'REFUND IS NOT CURRENTLY AVAILABLE',
+      RefundAlreadyClaimed: 'REFUND ALREADY CLAIMED',
+      AirdropNotAvailable: 'AIRDROP IS NOT CURRENTLY AVAILABLE',
+      AirdropAlreadyClaimed: 'AIRDROP ALREADY CLAIMED',
+      InsufficientRewardBalance: 'REWARD IS NOT CURRENTLY AVAILABLE',
+      EmptyBatch: 'SELECT AT LEAST ONE NFT',
+      ZeroAddress: 'TRANSACTION FAILED — PLEASE TRY AGAIN',
+      Unauthorized: 'TRANSACTION FAILED — PLEASE TRY AGAIN',
+      ReentrancyGuardReentrantCall: 'TRANSACTION FAILED — PLEASE TRY AGAIN'
+    },
+
+    // Pulls a custom-error name out of anywhere ethers reports it.
+    errName: function (err) {
+      if (!err) return '';
+      var e = err;
+      for (var hop = 0; hop < 4 && e; hop++) {
+        if (e.revert && e.revert.name) return e.revert.name;
+        if (e.errorName) return e.errorName;
+        e = e.error || e.info || e.cause || null;
+      }
+      // Error.message is non-enumerable, so JSON.stringify alone yields "{}".
+      // The message/shortMessage/reason strings are scanned explicitly.
+      var blob = String((err && err.message) || '') + ' ' +
+                 String((err && err.shortMessage) || '') + ' ' +
+                 String((err && err.reason) || '') + ' ' +
+                 String((err && err.data) || '');
+      try { blob += ' ' + JSON.stringify(err); } catch (x) {}
+      var keys = Object.keys(CH.ERRORS);
+      for (var i = 0; i < keys.length; i++) {
+        if (blob.indexOf(keys[i]) > -1) return keys[i];
+      }
+      return '';
+    },
+
     message: function (err) {
+      var named = CH.errName(err);
+      if (named && CH.ERRORS[named]) return CH.ERRORS[named];
+
       var code = err && (err.code || (err.info && err.info.error && err.info.error.code));
       var raw = String((err && (err.shortMessage || err.reason || err.message)) || '').toLowerCase();
-      if (code === 4001 || code === 'ACTION_REJECTED' || raw.indexOf('reject') > -1) return 'Transaction rejected in your wallet.';
-      if (raw.indexOf('nowallet') > -1) return 'No compatible wallet was detected.';
+
+      if (code === 4001 || code === 'ACTION_REJECTED' || raw.indexOf('reject') > -1 || raw.indexOf('denied') > -1) return 'WALLET CONNECTION REJECTED';
+      if (raw.indexOf('nowallet') > -1) return 'WALLET CONNECTION REQUIRED';
       if (raw.indexOf('choose') > -1) return 'Choose a wallet to continue.';
-      if (raw.indexOf('abi') > -1) return 'Staking data is temporarily unavailable. Please try again shortly.';
-      if (raw.indexOf('insufficient') > -1) return 'Not enough funds to cover the network fee.';
-      if (raw.indexOf('window') > -1 || raw.indexOf('closed') > -1) return 'Staking window closed.';
-      if (raw.indexOf('season') > -1) return 'Season staking complete.';
-      if (raw.indexOf('capacity') > -1 || raw.indexOf('full') > -1) return "Today's capacity is full.";
-      if (raw.indexOf('already') > -1 && raw.indexOf('stak') > -1) return 'That NFT is already staked.';
-      if (raw.indexOf('lock') > -1) return 'That NFT is still locked.';
-      if (raw.indexOf('owner') > -1) return 'That NFT is not in the connected wallet.';
-      if (raw.indexOf('unavailable') > -1 || raw.indexOf('network') > -1 || raw.indexOf('fetch') > -1) return 'NFT data is temporarily unavailable. Please try again shortly.';
-      if (raw.indexOf('revert') > -1 || raw.indexOf('execution') > -1) return 'The transaction could not be completed.';
-      return 'Something went wrong. Please try again shortly.';
+      if (raw.indexOf('wrongnetwork') > -1 || raw.indexOf('chain') > -1) return 'WRONG NETWORK';
+      if (raw.indexOf('abi') > -1) return 'STAKING IS CURRENTLY UNAVAILABLE';
+      if (raw.indexOf('approvalneeded') > -1) return 'NFT APPROVAL REQUIRED';
+      if (raw.indexOf('notowner') > -1) return 'THAT NFT IS NOT IN THE CONNECTED WALLET';
+      if (raw.indexOf('wrongcollection') > -1) return 'THAT NFT IS NOT PART OF THIS COLLECTION';
+      if (raw.indexOf('insufficient funds') > -1) return 'NOT ENOUGH FUNDS FOR THE NETWORK FEE';
+      if (raw.indexOf('unavailable') > -1 || raw.indexOf('fetch') > -1 || raw.indexOf('timeout') > -1) return 'NETWORK ERROR — PLEASE TRY AGAIN';
+      return 'TRANSACTION FAILED — PLEASE TRY AGAIN';
+    },
+
+    // Dry-run a write call against the node. Throws the decoded custom error
+    // instead of letting the user sign a transaction that cannot succeed.
+    simulate: function (contract, fn, args) {
+      if (!contract || !contract[fn] || !contract[fn].staticCall) return Promise.resolve(true);
+      return contract[fn].staticCall.apply(contract[fn], args || []).then(function () { return true; });
+    },
+
+    // Wallet-estimated gas with a small headroom; never a hardcoded low limit.
+    gasFor: function (contract, fn, args) {
+      if (!contract || !contract[fn] || !contract[fn].estimateGas) return Promise.resolve(undefined);
+      return contract[fn].estimateGas.apply(contract[fn], args || [])
+        .then(function (g) { return (g * 125n) / 100n; })
+        .catch(function () { return undefined; });
     },
 
     /* ---- helpers ---- */
