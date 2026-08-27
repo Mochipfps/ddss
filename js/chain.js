@@ -313,10 +313,12 @@
       if (raw.indexOf('choose') > -1) return 'Choose a wallet to continue.';
       if (raw.indexOf('abi') > -1) return 'Staking data is temporarily unavailable. Please try again shortly.';
       if (raw.indexOf('insufficient') > -1) return 'Not enough funds to cover the network fee.';
-      if (raw.indexOf('window') > -1 || raw.indexOf('closed') > -1) return 'Staking is currently closed.';
-      if (raw.indexOf('capacity') > -1) return 'The daily staking capacity has been reached.';
+      if (raw.indexOf('window') > -1 || raw.indexOf('closed') > -1) return 'Staking window closed.';
+      if (raw.indexOf('season') > -1) return 'Season staking complete.';
+      if (raw.indexOf('capacity') > -1 || raw.indexOf('full') > -1) return "Today's capacity is full.";
       if (raw.indexOf('already') > -1 && raw.indexOf('stak') > -1) return 'That NFT is already staked.';
       if (raw.indexOf('lock') > -1) return 'That NFT is still locked.';
+      if (raw.indexOf('owner') > -1) return 'That NFT is not in the connected wallet.';
       if (raw.indexOf('unavailable') > -1 || raw.indexOf('network') > -1 || raw.indexOf('fetch') > -1) return 'NFT data is temporarily unavailable. Please try again shortly.';
       if (raw.indexOf('revert') > -1 || raw.indexOf('execution') > -1) return 'The transaction could not be completed.';
       return 'Something went wrong. Please try again shortly.';
@@ -341,6 +343,23 @@
       if (h > 0) return h + 'h ' + m + 'm ' + ss + 's';
       return m + 'm ' + ss + 's';
     },
+    // Next 14:00-18:00 UTC boundary, computed from UTC only — never local time.
+    // Display support for the contract's own window state, not a substitute.
+    schedule: function () {
+      var S = (CFG.staking || {});
+      var openH = S.windowOpenUtcHour == null ? 14 : S.windowOpenUtcHour;
+      var closeH = S.windowCloseUtcHour == null ? 18 : S.windowCloseUtcHour;
+      var now = new Date();
+      var h = now.getUTCHours();
+      var open = h >= openH && h < closeH;
+      var target = new Date(Date.UTC(
+        now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+        open ? closeH : openH, 0, 0, 0
+      ));
+      if (!open && h >= closeH) target.setUTCDate(target.getUTCDate() + 1);
+      return { open: open, until: Math.max(0, Math.floor((target.getTime() - now.getTime()) / 1000)) };
+    },
+
     utc: function (secs) {
       if (!secs) return '——';
       var d = new Date(Number(secs) * 1000);
