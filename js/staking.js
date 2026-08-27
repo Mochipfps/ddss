@@ -6,6 +6,16 @@
   if (!grid) return;
 
   var owned = [], stakedSet = {}, selected = {}, busy = false;
+  var approved = null;   // null = unknown, true/false = read from the NFT contract
+
+  // isApprovedForAll(owner, stakingContract) — the permission stake() needs to
+  // pull the NFT. Without it stake() reverts, which was the failure.
+  function readApproval() {
+    if (!CH.account || CH.wrongNetwork) { approved = null; return Promise.resolve(); }
+    return CH.nftWrite().then(function (nft) {
+      return nft.isApprovedForAll(CH.account, (CFG.contracts || {}).staking);
+    }).then(function (ok) { approved = !!ok; }).catch(function () { approved = null; });
+  }
 
   function tile(label, value) {
     return '<div class="panel panel--flat"><span class="pixel" style="font-size:10px;line-height:1.7;color:var(--red)">' +
@@ -104,7 +114,7 @@
         return;
       }
       msg.textContent = list.length + (list.length === 1 ? ' NFT found.' : ' NFTs found.');
-      return markStaked(list).then(draw);
+      return markStaked(list).then(readApproval).then(draw);
     }).catch(function () {
       // Every endpoint failed: distinct from "zero NFTs", and retryable.
       msg.innerHTML = 'NFT DATA TEMPORARILY UNAVAILABLE ' +
@@ -154,74 +164,147 @@
     var ids = selectedIds();
     var actions = MB.el('st-actions');
     MB.show(actions, !!owned.length && !!CH.account && !CH.wrongNetwork);
-    var b = MB.el('st-stake');
+    var b = MB.el('st-stake'), ap = MB.el('st-approve');
     if (!b) return;
     var open = window.__mbWindowOpen === true;
-    var can = ids.length > 0 && open && !busy;
+    var needsApproval = approved === false;
+
+    // APPROVE NFT appears only while permission is missing; STAKE waits for it.
+    MB.show(ap, needsApproval);
+    if (ap) {
+      ap.disabled = busy;
+      ap.classList.toggle('btn--off', busy);
+    }
+
+    var can = ids.length > 0 && open && !busy && !needsApproval;
     b.disabled = !can;
     b.classList.toggle('btn--off', !can);
     b.classList.toggle('btn--green', can);
     b.textContent = ids.length > 1 ? 'STAKE ' + ids.length + ' SELECTED' : 'STAKE SELECTED';
-    MB.el('st-sel').textContent = !open
-      ? 'Staking is currently closed.'
-      : (ids.length ? ids.length + (ids.length === 1 ? ' NFT selected.' : ' NFTs selected.') : 'Select one or more available NFTs.');
+    MB.el('st-sel').textContent = needsApproval
+      ? 'Approve the staking contract once, then stake.'
+      : (!open ? 'Staking is currently closed.'
+        : (ids.length ? ids.length + (ids.length === 1 ? ' NFT selected.' : ' NFTs selected.') : 'Select one or more available NFTs.'));
   }
 
   /* ---- stake flow: approve, then send to the staking contract ---- */
+  /* ---- approval transaction ---- */
+  MB.el('st-approve').addEventListener('click', function () {
+    if (busy) return;
+    var msg = MB.el('st-msg');
+    busy = true; refreshActions();
+    msg.textContent = 'Approve the staking contract in your wallet...';
+    var staking = (CFG.contracts || {}).staking;
+    CH.nftWrite().then(function (nft) {
+      return CH.gasFor(nft, 'setApprovalForAll', [staking, true]).then(function (gas) {
+        return nft.setApprovalForAll(staking, true, gas ? { gasLimit: gas } : {});
+      });
+    }).then(function (tx) {
+      msg.textContent = 'Approval pending...';
+      return tx.wait();
+    }).then(function () {
+      return readApproval();
+    }).then(function () {
+      busy = false;
+      msg.textContent = approved ? 'Approval confirmed. You can stake now.' : '';
+      refreshActions();
+    }).catch(function (e) {
+      busy = false;
+      msg.textContent = CH.message(e);
+      refreshActions();
+    });
+  });
+
+  /* ---- stake transaction ---- */
   MB.el('st-stake').addEventListener('click', function () {
     var ids = selectedIds();
     if (!ids.length || busy) return;
     var msg = MB.el('st-msg');
     busy = true; refreshActions();
-    msg.textContent = 'Confirm in your wallet...';
+    msg.textContent = 'Checking staking conditions...';
 
     var staking = (CFG.contracts || {}).staking;
-    // Pre-flight against live contract state so the wallet is never opened for
-    // a transaction the contract would reject.
+    // Every gate is read from the live contract, and the NFT contract the
+    // staking contract actually accepts is verified, before anything is signed.
     CH.stakingRead().then(function (c) {
       return Promise.all([
         CH.safe(c, 'isSystemEnabled'), CH.safe(c, 'isStakingEnabled'),
         CH.safe(c, 'isStakingWindowOpen'), CH.safe(c, 'remainingTodayCapacity'),
-        CH.safe(c, 'seasonComplete')
+        CH.safe(c, 'seasonComplete'), CH.safe(c, 'emergencyPaused'),
+        CH.safe(c, 'nftContract')
       ]).then(function (r) {
-        if (r[4] === true) throw new Error('season complete');
-        if (r[0] === false || r[1] === false) throw new Error('staking closed');
-        if (r[2] === false) throw new Error('staking window closed');
-        if (r[3] != null && Number(r[3]) < ids.length) throw new Error('capacity full');
+        if (r[5] === true) throw new Error('EmergencyPausedActive');
+        if (r[4] === true) throw new Error('TotalCapacityReached');
+        if (r[0] === false) throw new Error('SystemIsDisabled');
+        if (r[1] === false) throw new Error('StakingIsDisabled');
+        if (r[2] === false) throw new Error('StakingWindowClosed');
+        if (r[3] != null && Number(r[3]) < ids.length) throw new Error('DailyCapacityReached');
+        var want = String((CFG.contracts || {}).nft || '').toLowerCase();
+        if (r[6] && String(r[6]).toLowerCase() !== want) throw new Error('wrongCollection');
       });
     }).then(function () {
-      return CH.nftWrite();
-    }).then(function (nft) {
-      return nft.isApprovedForAll(CH.account, staking).then(function (ok) {
-        if (ok) return null;
-        msg.textContent = 'Approve the staking contract in your wallet...';
-        return nft.setApprovalForAll(staking, true).then(function (tx) {
-          msg.textContent = 'Approval pending...';
-          return tx.wait();
-        });
+      // Ownership and current stake state, straight from the NFT contract.
+      return CH.nftWrite().then(function (nft) {
+        return Promise.all(ids.map(function (id) {
+          return nft.ownerOf(id).then(function (o) {
+            if (String(o).toLowerCase() !== String(CH.account).toLowerCase()) throw new Error('notOwner');
+          });
+        }));
       });
+    }).then(function () {
+      return CH.stakingRead().then(function (c) {
+        return Promise.all(ids.map(function (id) {
+          return CH.safe(c, 'isStaked', [id]).then(function (v) {
+            if (v === true) throw new Error('AlreadyStaked');
+          });
+        }));
+      });
+    }).then(function () {
+      if (approved === true) return null;
+      // Approval is a separate, explicit transaction — never bundled silently.
+      throw new Error('approvalNeeded');
     }).then(function () {
       return CH.stakingWrite();
     }).then(function (c) {
-      msg.textContent = 'Confirm the staking transaction in your wallet...';
-      if (ids.length > 1 && typeof c.stakeBatch === 'function') return c.stakeBatch(ids);
-      if (ids.length > 1) {
-        // No batch function in the ABI: send them one at a time.
+      var batch = ids.length > 1 && typeof c.stakeBatch === 'function';
+      var fn = batch ? 'stakeBatch' : 'stake';
+      var args = batch ? [ids] : [ids[0]];
+
+      if (!batch && ids.length > 1) {
+        // No batch support: one confirmed transaction per NFT, in sequence.
         return ids.reduce(function (p, id) {
-          return p.then(function () { return c.stake(id).then(function (tx) { return tx.wait(); }); });
+          return p.then(function () {
+            return CH.simulate(c, 'stake', [id])
+              .then(function () { return CH.gasFor(c, 'stake', [id]); })
+              .then(function (gas) {
+                msg.textContent = 'Confirm NFT #' + id + ' in your wallet...';
+                return c.stake(id, gas ? { gasLimit: gas } : {});
+              })
+              .then(function (tx) { msg.textContent = 'Transaction pending...'; return tx.wait(); });
+          });
         }, Promise.resolve()).then(function () { return null; });
       }
-      return c.stake(ids[0]);
+
+      // Dry-run first: a revert is caught here, before the wallet opens.
+      msg.textContent = 'Simulating the transaction...';
+      return CH.simulate(c, fn, args)
+        .then(function () { return CH.gasFor(c, fn, args); })
+        .then(function (gas) {
+          msg.textContent = 'Confirm the staking transaction in your wallet...';
+          return c[fn].apply(c, gas ? args.concat([{ gasLimit: gas }]) : args);
+        });
     }).then(function (tx) {
       if (!tx) return null;
       msg.textContent = 'Transaction pending...';
       return tx.wait();
-    }).then(function () {
-      msg.textContent = 'Stake confirmed.';
+    }).then(function (receipt) {
+      // Confirmed only: success is never shown before the receipt arrives.
+      if (receipt && receipt.status === 0) throw new Error('failed');
+      msg.textContent = 'STAKE CONFIRMED';
       selected = {};
       busy = false;
       loadStatus();
-      loadNfts();
+      readApproval().then(loadNfts);
     }).catch(function (e) {
       busy = false;
       msg.textContent = CH.message(e);
@@ -238,6 +321,6 @@
     window.setTimeout(function () { b.disabled = false; }, 1200);
   });
 
-  CH.on(function () { loadStatus(); loadNfts(); });
+  CH.on(function () { approved = null; loadStatus(); loadNfts(); });
   loadStatus();
 })();
