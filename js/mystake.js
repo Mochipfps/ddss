@@ -141,11 +141,19 @@
     CH.stakingWrite().then(function (c) {
       var fn = FN[act];
       if (typeof c[fn] !== 'function') throw new Error('unavailable');
-      return c[fn](id);
+      // Dry-run first so a revert is reported without opening the wallet.
+      if (note) note.textContent = 'Checking...';
+      return CH.simulate(c, fn, [id])
+        .then(function () { return CH.gasFor(c, fn, [id]); })
+        .then(function (gas) {
+          if (note) note.textContent = 'Confirm in your wallet...';
+          return c[fn](id, gas ? { gasLimit: gas } : {});
+        });
     }).then(function (tx) {
       if (note) note.textContent = 'Transaction pending...';
       return tx.wait();
-    }).then(function () {
+    }).then(function (receipt) {
+      if (receipt && receipt.status === 0) throw new Error('failed');
       busy[id] = false;
       load();
     }).catch(function (er) {
