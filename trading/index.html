@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MiNI BRoKER — Trading</title>
+<meta name="description" content="MiNI BRoKER — a pixel-art NFT collection on Robinhood Mainnet.">
+<link rel="icon" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-page="trading" data-base="../">
+<header class="nav"><div class="nav__in"><button class="nav__menu" data-mb="menu">MENU</button><nav class="nav__list" id="mb-nav"></nav></div></header>
+<main class="wrap">
+<button class="btn back" data-mb="back">&lt; BACK</button>
+<section class="sec">
+<h2 class="h2">TRADING</h2>
+<p class="lead">A future part of the MiNI BRoKER ecosystem.</p>
+<div class="panel" id="tr-gate">
+  <span class="kicker" id="tr-state">UPCOMING</span>
+  <div class="gcard">
+    <div class="panel panel--flat"><span class="pixel" style="font-size:10px;line-height:1.7;color:var(--red)">OPENS IN</span><div class="pixel" id="tr-until" style="font-size:14px;margin-top:10px">&mdash;&mdash;</div></div>
+    <div class="panel panel--flat"><span class="pixel" style="font-size:10px;line-height:1.7;color:var(--red)">LIFETIME</span><div class="pixel" id="tr-life" style="font-size:14px;margin-top:10px">&mdash;&mdash;</div></div>
+  </div>
+</div>
+<div class="dark" style="border:4px solid var(--sky);flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center"><span class="pixel" style="font-size:clamp(10px,1.8vw,13px);line-height:1.7;color:var(--sky)">WALLET NOT CONNECTED</span><button class="btn btn--sky btn--on-dark" data-mb="wallet">CONNECT WALLET</button></div>
+<div class="lock"><div class="lock__body"><div class="gcard"><span class="bar" style="height:66px;background:var(--orange)"></span><span class="bar" style="height:66px;background:var(--yellow)"></span><span class="bar" style="height:66px;background:var(--green)"></span><span class="bar" style="height:66px;background:var(--purple)"></span></div><div class="gcard"><span class="bar" style="height:66px;background:var(--yellow)"></span><span class="bar" style="height:66px;background:var(--sky)"></span><span class="bar" style="height:66px;background:var(--purple)"></span><span class="bar" style="height:66px;background:var(--orange)"></span></div><div class="gcard"><div class="panel panel--flat"><div class="row"><span class="bar" style="flex:1;height:34px;background:var(--green)"></span><span class="bar" style="flex:1;height:34px;background:var(--red)"></span></div><span class="bar" style="height:38px;background:var(--purple)"></span></div><div class="panel panel--flat"><span class="pixel" style="font-size:12px">•••••• / ••••••</span><span class="pixel" style="font-size:12px">•••••• / ••••••</span><span class="pixel" style="font-size:12px">•••••• / ••••••</span></div></div></div><div class="lock__veil"><span class="lock__label" style="color:var(--sky);border:4px solid var(--sky)">FUTURE ECOSYSTEM FEATURE</span></div></div>
+<div class="panel"><span class="pixel" style="font-size:12px;line-height:1.7">HOW IT WILL WORK</span><div class="row"><span class="num" style="background:var(--red);color:var(--cream)">01</span><span class="pixel" style="font-size:11px;line-height:1.6">CONNECT WALLET</span></div><div class="row"><span class="num" style="background:var(--orange);color:var(--ink)">02</span><span class="pixel" style="font-size:11px;line-height:1.6">SELECT AN ASSET</span></div><div class="row"><span class="num" style="background:var(--yellow);color:var(--ink)">03</span><span class="pixel" style="font-size:11px;line-height:1.6">CHOOSE LONG OR SHORT</span></div><div class="row"><span class="num" style="background:var(--green);color:var(--cream)">04</span><span class="pixel" style="font-size:11px;line-height:1.6">SET POSITION PARAMETERS</span></div><div class="row"><span class="num" style="background:var(--sky);color:var(--ink)">05</span><span class="pixel" style="font-size:11px;line-height:1.6">REVIEW THE POSITION</span></div><div class="row"><span class="num" style="background:var(--purple);color:var(--cream)">06</span><span class="pixel" style="font-size:11px;line-height:1.6">CONFIRM THE TRADE</span></div><div class="row"><span class="num" style="background:var(--cream);color:var(--ink)">07</span><span class="pixel" style="font-size:11px;line-height:1.6">TRACK THE POSITION</span></div></div>
+<div class="panel"><span class="pixel" style="font-size:12px;line-height:1.7">PLANNED ASSETS</span><p class="txt">Assets the future trading interface is being prepared for.</p><div class="gsmall" id="mb-assets" style="grid-template-columns:repeat(auto-fill,minmax(132px,1fr))"></div></div>
+</section>
+</main>
+<footer class="foot"><div class="foot__in" id="mb-foot"></div></footer>
+<div class="modal" id="mb-modal"><div class="modal__box"><h3 class="pixel" style="font-size:clamp(14px,3vw,21px);line-height:1.5;margin:0 0 14px">MINT FIRST</h3><p class="txt" style="font-size:21px;margin:0 0 18px">Wallet connection will be activated after the MiNI BRoKER mint is completed.</p><button class="btn btn--y" data-mb="modal-close" style="font-size:11px;padding:13px 22px">OK</button></div></div>
+<script src="../js/config.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/trading.js"></script>
+<script src="../js/trading-gate.js"></script>
+</body>
+</html>

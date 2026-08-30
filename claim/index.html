@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MiNI BRoKER — GTD Claim</title>
+<meta name="description" content="MiNI BRoKER — claim a Guaranteed Mint Access spot.">
+<link rel="icon" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-page="claim" data-base="../">
+<header class="nav"><div class="nav__in"><button class="nav__menu" data-mb="menu">MENU</button><nav class="nav__list" id="mb-nav"></nav></div></header>
+<main class="wrap">
+<button class="btn back" data-mb="back">&lt; BACK</button>
+
+<section class="sec">
+<h2 class="h2">GTD C<span style="color:var(--red)">L</span>AIM</h2>
+<p class="lead">Guaranteed Mint Access for the first 500 completed claims. First come, first served.</p>
+
+<div class="gcard" id="cl-counter">
+  <div class="panel"><span class="kicker">SPOTS</span><p style="font-size:26px;line-height:1.2;margin:0">500</p></div>
+  <div class="panel"><span class="kicker">CLAIMED</span><p style="font-size:26px;line-height:1.2;margin:0"><span id="cl-claimed">——</span> / 500</p></div>
+  <div class="panel"><span class="kicker">REMAINING</span><p style="font-size:26px;line-height:1.2;margin:0" id="cl-left">——</p></div>
+</div>
+
+<div id="cl-flow" hidden>
+  <div class="steps" id="cl-steps"></div>
+
+  <div class="panel" style="margin-top:16px">
+    <span class="kicker" id="cl-task">TASK 01</span>
+    <h3 class="h3" id="cl-title"></h3>
+    <p class="txt" id="cl-copy"></p>
+    <div id="cl-body"></div>
+    <div class="row"><button class="btn btn--y" id="cl-next">CONTINUE</button><span class="note note--red" id="cl-hint"></span></div>
+  </div>
+
+  <p class="note" style="margin-top:14px">We never ask for a private key, seed phrase, password or wallet signature.</p>
+</div>
+
+<div class="panel" id="cl-full" hidden>
+  <span class="kicker">GTD FULL</span>
+  <h3 class="h3">EVERY GUARANTEED SPOT HAS BEEN CLAIMED.</h3>
+  <p class="txt">The whitelist form is still open and spots will be raffled from those entries ahead of the mint.</p>
+  <a class="btn btn--y" href="../whitelist/" style="align-self:flex-start">JOIN WHITELIST</a>
+</div>
+
+<div class="panel" id="cl-dupe" hidden>
+  <span class="kicker">ALREADY CLAIMED</span>
+  <h3 class="h3">GTD ACCESS ALREADY CLAIMED</h3>
+  <p class="txt">This X username or wallet address already holds a GTD spot. Only one spot can be claimed per person.</p>
+</div>
+</section>
+
+<section class="sec" id="cl-done" hidden>
+  <div class="win">
+    <span class="spark" style="transform:rotate(0deg)"><i style="background:var(--yellow);animation-duration:1s"></i></span>
+    <span class="spark" style="transform:rotate(60deg)"><i style="background:var(--red);animation-duration:1.06s"></i></span>
+    <span class="spark" style="transform:rotate(120deg)"><i style="background:var(--purple);animation-duration:1.12s"></i></span>
+    <span class="spark" style="transform:rotate(180deg)"><i style="background:var(--sky);animation-duration:1.18s"></i></span>
+    <span class="spark" style="transform:rotate(240deg)"><i style="background:var(--orange);animation-duration:1.24s"></i></span>
+    <span class="spark" style="transform:rotate(300deg)"><i style="background:var(--cream);animation-duration:1.3s"></i></span>
+    <h3 class="win__t">CONGRATULATIONS</h3>
+    <p class="win__p">YOUR GTD ACCESS IS CONFIRMED.<br>Your Guaranteed Mint Access spot has been successfully secured.</p>
+    <div class="row" style="justify-content:center;margin-top:18px;position:relative">
+      <span class="card__chip" style="background:var(--ink);color:var(--cream)">MINT DATE</span>
+      <span class="card__chip" style="background:var(--cream);border:3px solid var(--ink)" id="cl-mint">UPCOMING</span>
+    </div>
+    <p class="win__p" style="margin-top:18px">Follow @MlNiBroker and keep notifications enabled for future project updates.</p>
+  </div>
+</section>
+</main>
+<footer class="foot"><div class="foot__in" id="mb-foot"></div></footer>
+<div class="modal" id="mb-modal"><div class="modal__box"><h3 class="pixel" style="font-size:clamp(14px,3vw,21px);line-height:1.5;margin:0 0 14px">MINT FIRST</h3><p class="txt" style="font-size:21px;margin:0 0 18px">Wallet connection will be activated after the MiNI BRoKER mint is completed.</p><button class="btn btn--y" data-mb="modal-close">OK</button></div></div>
+<script src="../js/config.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/claim.js"></script>
+</body>
+</html>
